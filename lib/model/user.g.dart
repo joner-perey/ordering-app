@@ -22,6 +22,7 @@ class UserAdapter extends TypeAdapter<User> {
       email: fields[2] as String,
       user_type: fields[3] as String,
       image: fields[4] as String,
+      phone_number: fields[5] as String,
     );
   }
 
@@ -38,7 +39,9 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(3)
       ..write(obj.user_type)
       ..writeByte(4)
-      ..write(obj.image);
+      ..write(obj.image)
+      ..writeByte(5)
+      ..write(obj.phone_number);
   }
 
   @override

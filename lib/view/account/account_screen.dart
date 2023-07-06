@@ -6,6 +6,7 @@ import 'package:lalaco/controller/controllers.dart';
 import 'package:lalaco/view/account/auth/sign_up_screen.dart';
 import 'package:lalaco/view/order/order_screen.dart';
 import 'package:lalaco/view/profile/profile_screen.dart';
+import 'package:lalaco/view/profile/update_password_screen.dart';
 
 import 'auth/sign_in_screen.dart';
 
@@ -84,10 +85,17 @@ class AccountScreen extends StatelessWidget {
           buildAccountCard(
               title: "Profile Info",
               onClick: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const ProfileScreen()));
+                if (authController.user.value != null) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ProfileScreen()));
+                } else {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SignInScreen()));
+                }
               }),
           Obx(() {
             if (authController.user.value?.user_type.toString() == 'Vendor') {
@@ -121,7 +129,21 @@ class AccountScreen extends StatelessWidget {
             }
           }),
           buildAccountCard(title: "Notification", onClick: () {}),
-          buildAccountCard(title: "Settings", onClick: () {}),
+          buildAccountCard(
+              title: "Settings",
+              onClick: () {
+                if (authController.user.value != null) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const UpdatePasswordScreen()));
+                } else {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SignInScreen()));
+                }
+              }),
           Obx(() => buildAccountCard(
               title: authController.user.value == null ? "Sign In" : "Sign Out",
               onClick: () {

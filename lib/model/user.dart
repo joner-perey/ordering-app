@@ -21,6 +21,9 @@ class User {
   @HiveField(4)
   String? image;
 
+  @HiveField(5)
+  String? phone_number;
+
   // @HiveField(4)
   // DateTime? birthDay;
 
@@ -33,7 +36,8 @@ class User {
       required this.name,
       required this.email,
       required this.user_type,
-      required this.image});
+      required this.image,
+      required this.phone_number});
 
   factory User.fromJson(Map<String, dynamic> data) => User(
         id: data['id'].toString(),
@@ -41,6 +45,7 @@ class User {
         email: data['email'],
         user_type: data['user_type'],
         image: data['image'],
+        phone_number: data['phone_number'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -49,5 +54,6 @@ class User {
         'email': this.email,
         'user_type': this.user_type,
         'image': this.image,
+        'phone_number': this.phone_number,
       };
 }
