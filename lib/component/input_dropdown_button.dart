@@ -8,6 +8,7 @@ class InputDropdownButton<T> extends StatelessWidget {
   final double? width;
   final double? height;
   final String Function(T)? itemToString;
+  final String? Function(T?)? validation; // Added validation property
 
   const InputDropdownButton({
     Key? key,
@@ -18,6 +19,7 @@ class InputDropdownButton<T> extends StatelessWidget {
     this.width,
     this.height,
     this.itemToString,
+    this.validation, // Added validation property
   }) : super(key: key);
 
   @override
@@ -34,6 +36,7 @@ class InputDropdownButton<T> extends StatelessWidget {
             child: Text(itemToString != null ? itemToString!(item) : item.toString()),
           );
         }).toList(),
+        validator: validation, // Set the validation function
         decoration: InputDecoration(
           hintText: title,
           labelText: title,

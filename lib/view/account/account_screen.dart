@@ -5,6 +5,7 @@ import 'package:lalaco/const.dart';
 import 'package:lalaco/controller/controllers.dart';
 import 'package:lalaco/view/account/auth/sign_up_screen.dart';
 import 'package:lalaco/view/order/order_screen.dart';
+import 'package:lalaco/view/profile/profile_screen.dart';
 
 import 'auth/sign_in_screen.dart';
 
@@ -86,8 +87,10 @@ class AccountScreen extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const SignUpScreen()));
+                        builder: (context) => const ProfileScreen()));
               }),
+          if (authController.user.value?.user_type.toString() == 'Vendor')
+            buildAccountCard(title: "My Store", onClick: () {}),
           buildAccountCard(
               title: "My Orders",
               onClick: () {
@@ -103,6 +106,8 @@ class AccountScreen extends StatelessWidget {
                           builder: (context) => const SignInScreen()));
                 }
               }),
+          if (authController.user.value?.user_type.toString() == 'Vendor')
+            buildAccountCard(title: "My Schedule", onClick: () {}),
           buildAccountCard(title: "Notification", onClick: () {}),
           buildAccountCard(title: "Settings", onClick: () {}),
           Obx(() => buildAccountCard(

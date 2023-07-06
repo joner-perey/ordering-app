@@ -70,23 +70,24 @@ class AuthController extends GetxController {
         user_type: user_type,
         phone: phone,
       );
-      if (result.statusCode == 200) {
-        String token = json.decode(result.body)['jwt'];
+      print(result.statusCode);
+      if (result.statusCode == 200 || result.statusCode == 201) {
+        // String token = json.decode(result.body)['token'];
         // var userResult = await RemoteAuthService().createProfile(fullName: fullName, token: token);
         // if(userResult.statusCode == 200) {
         //   user.value = userFromJson(userResult.body);
-        await _localAuthService.addToken(token: token);
+        // await _localAuthService.addToken(token: token);
         // await _localAuthService.addUser(user: user);
-        EasyLoading.showSuccess("Welcome to MyGrocery!");
+        EasyLoading.showSuccess("Welcome to Lalaco!");
         Navigator.of(Get.overlayContext!).pop();
         // } else {
         //   EasyLoading.showError('Something wrong. Try again!');
         // }
       } else {
-        EasyLoading.showError('Something wrong. Try again!');
+        EasyLoading.showError('1Something wrong. Try again!');
       }
     } catch (e) {
-      EasyLoading.showError('Something wrong. Try again!');
+      EasyLoading.showError('2Something wrong. Try again!');
     } finally {
       EasyLoading.dismiss();
     }
