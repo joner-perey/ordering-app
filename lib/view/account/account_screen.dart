@@ -89,8 +89,14 @@ class AccountScreen extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (context) => const ProfileScreen()));
               }),
-          if (authController.user.value?.user_type.toString() == 'Vendor')
-            buildAccountCard(title: "My Store", onClick: () {}),
+          Obx(() {
+            if (authController.user.value?.user_type.toString() == 'Vendor') {
+              return buildAccountCard(title: "My Store", onClick: () {});
+            } else {
+              // Return another widget or null if the condition is false
+              return SizedBox.shrink();
+            }
+          }),
           buildAccountCard(
               title: "My Orders",
               onClick: () {
@@ -106,8 +112,14 @@ class AccountScreen extends StatelessWidget {
                           builder: (context) => const SignInScreen()));
                 }
               }),
-          if (authController.user.value?.user_type.toString() == 'Vendor')
-            buildAccountCard(title: "My Schedule", onClick: () {}),
+          Obx(() {
+            if (authController.user.value?.user_type.toString() == 'Vendor') {
+              return buildAccountCard(title: "My Schedule", onClick: () {});
+            } else {
+              // Return another widget or null if the condition is false
+              return SizedBox.shrink();
+            }
+          }),
           buildAccountCard(title: "Notification", onClick: () {}),
           buildAccountCard(title: "Settings", onClick: () {}),
           Obx(() => buildAccountCard(
