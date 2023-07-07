@@ -31,24 +31,28 @@ class AccountScreen extends StatelessWidget {
                 GestureDetector(
                   onTap: () async {
                     if (authController.user.value != null) {
-                      final XFile? pickedImage =
-                          await _picker.pickImage(source: ImageSource.gallery);
-                      if (pickedImage != null) {
-                        authController.uploadProfilePicture();
-                      }
+                      // final XFile? pickedImage =
+                      //     await _picker.pickImage(source: ImageSource.gallery);
+                      // if (pickedImage != null) {
+                      //
+                      // }
+
+                      await authController.uploadProfilePicture();
                     }
                   },
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      CircleAvatar(
-                        radius: 35,
-                        backgroundImage: authController.user.value?.image !=
-                                null
-                            ? NetworkImage(
-                                    '$baseUrl/storage/uploads/${authController.user.value?.image}')
-                                as ImageProvider<Object>?
-                            : const AssetImage("assets/user_image.png"),
+                      Obx(() =>
+                        CircleAvatar(
+                          radius: 35,
+                          backgroundImage: authController.user.value?.image !=
+                                  null
+                              ? NetworkImage(
+                                      '$baseUrl/storage/uploads/${authController.user.value?.image}')
+                                  as ImageProvider<Object>?
+                              : const AssetImage("assets/user_image.png"),
+                        )
                       ),
                       if (authController.user.value != null)
                         Positioned(
