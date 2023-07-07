@@ -26,6 +26,22 @@ class RemoteStoreService {
     return stores;
   }
 
+  Future<Store?> fetchStoreByUserId({ required int userId }) async {
+    var response = await http.get(Uri.parse('$remoteUrl/by_user_id/$userId'));
+    final parsedJson = jsonDecode(response.body);
+    final result = parsedJson['store'];
+
+    Store? store;
+
+    if (response.statusCode == 200) {
+      store = Store.fromJson(result);
+    } else {
+      throw Exception('Failed to load Stores');
+    }
+
+    return store;
+  }
+
   Future<dynamic> getByName({required String keyword}) async {
     var response = await client.get(Uri.parse('$remoteUrl?search=$keyword'));
     final parsedJson = jsonDecode(response.body);

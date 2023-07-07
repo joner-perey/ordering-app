@@ -1,31 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:lalaco/component/input_outline_button.dart';
 import 'package:lalaco/component/input_text_button.dart';
 import 'package:lalaco/component/input_text_field.dart';
 import 'package:lalaco/controller/controllers.dart';
-import 'package:lalaco/extension/string_extension.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+class UpdatePasswordScreen extends StatefulWidget {
+  const UpdatePasswordScreen({Key? key}) : super(key: key);
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreen();
+  State<UpdatePasswordScreen> createState() => _UpdatePasswordScreen();
 }
 
-class _ProfileScreen extends State<ProfileScreen> {
+class _UpdatePasswordScreen extends State<UpdatePasswordScreen> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController fullNameController =
-      TextEditingController(text: authController.user.value?.name);
-  TextEditingController emailController =
-      TextEditingController(text: authController.user.value?.email);
-  TextEditingController phoneController =
-      TextEditingController(text: authController.user.value?.phone_number);
+
+  TextEditingController currentPasswordController = TextEditingController();
+  TextEditingController newPasswordController = TextEditingController();
+  TextEditingController confirmNewPasswordController = TextEditingController();
 
   @override
   void dispose() {
-    fullNameController.dispose();
-    emailController.dispose();
-    phoneController.dispose();
+    currentPasswordController.dispose();
+    newPasswordController.dispose();
+    confirmNewPasswordController.dispose();
     super.dispose();
   }
 
@@ -42,13 +40,13 @@ class _ProfileScreen extends State<ProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Spacer(),
-                const Text("Profile Info,",
+                const Text("Setting,",
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 32,
                         fontWeight: FontWeight.bold)),
                 const Text(
-                  "You can update your profile info.",
+                  "You can update your password here.",
                   style: TextStyle(
                       color: Colors.grey,
                       fontSize: 22,
@@ -59,8 +57,9 @@ class _ProfileScreen extends State<ProfileScreen> {
                   flex: 3,
                 ),
                 InputTextField(
-                  title: 'Full Name',
-                  textEditingController: fullNameController,
+                  title: 'Old Password',
+                  obsecureText: true,
+                  textEditingController: currentPasswordController,
                   validation: (String? value) {
                     if (value == null || value.isEmpty) {
                       return "This field can't be empty";
@@ -70,42 +69,44 @@ class _ProfileScreen extends State<ProfileScreen> {
                 ),
                 const SizedBox(height: 10),
                 InputTextField(
-                  title: 'Email',
-                  textEditingController: emailController,
-                  // initialValue: authController.user.value?.email,
+                  title: 'New Password',
+                  obsecureText: true,
+                  textEditingController: newPasswordController,
                   validation: (String? value) {
                     if (value == null || value.isEmpty) {
                       return "This field can't be empty";
-                    } else if (!value.isValidEmail) {
-                      return "Please enter valid email";
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 10),
                 InputTextField(
-                  title: 'Mobile No.',
-                  textEditingController: phoneController,
+                  title: 'Confirm New Password',
+                  obsecureText: true,
+                  textEditingController: confirmNewPasswordController,
                   validation: (String? value) {
                     if (value == null || value.isEmpty) {
                       return "This field can't be empty";
-                    } else if (!value.isValidPhone) {
-                      return "Please enter valid phone number";
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 10),
-                const Spacer(),
                 InputTextButton(
                   title: "Update",
                   onClick: () {
                     if (_formKey.currentState!.validate()) {
-                      authController.updateProfile(
-                          id: int.parse(authController.user.value!.id),
-                          name: fullNameController.text,
-                          email: emailController.text,
-                          phone_number: phoneController.text);
+                      if (newPasswordController.text ==
+                          confirmNewPasswordController.text) {
+                        authController.updatePassword(
+                            id: int.parse(authController.user.value!.id),
+                            current_password: currentPasswordController.text,
+                            new_password: newPasswordController.text);
+                      } else {
+                        EasyLoading.showError(
+                            'New password and confirm password not match',
+                            dismissOnTap: false);
+                      }
                     }
                   },
                 ),

@@ -6,6 +6,7 @@ class Store {
   final String location_description;
   final String longitude;
   final String latitude;
+  final int user_id;
 
   const Store({
     required this.id,
@@ -15,6 +16,7 @@ class Store {
     required this.location_description,
     required this.longitude,
     required this.latitude,
+    required this.user_id,
   });
 
   factory Store.fromJson(Map<String, dynamic> json) {
@@ -25,7 +27,8 @@ class Store {
         store_description: json['store_description'],
         location_description: json['location_description'],
         longitude: json['longitude'],
-        latitude: json['latitude']
+        latitude: json['latitude'],
+        user_id: json['user_id']
     );
   }
 

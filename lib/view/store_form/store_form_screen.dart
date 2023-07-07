@@ -5,21 +5,21 @@ import 'package:lalaco/component/input_text_field.dart';
 import 'package:lalaco/controller/controllers.dart';
 import 'package:lalaco/extension/string_extension.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+class StoreFormScreen extends StatefulWidget {
+  const StoreFormScreen({Key? key}) : super(key: key);
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreen();
+  State<StoreFormScreen> createState() => _StoreFormScreenState();
 }
 
-class _ProfileScreen extends State<ProfileScreen> {
+class _StoreFormScreenState extends State<StoreFormScreen> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController fullNameController =
-      TextEditingController(text: authController.user.value?.name);
+  TextEditingController(text: authController.user.value?.name);
   TextEditingController emailController =
-      TextEditingController(text: authController.user.value?.email);
+  TextEditingController(text: authController.user.value?.email);
   TextEditingController phoneController =
-      TextEditingController(text: authController.user.value?.phone_number);
+  TextEditingController(text: authController.user.value?.phone_number);
 
   @override
   void dispose() {
@@ -42,13 +42,13 @@ class _ProfileScreen extends State<ProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Spacer(),
-                const Text("Profile Info,",
+                const Text("Store Info,",
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 32,
                         fontWeight: FontWeight.bold)),
                 const Text(
-                  "You can update your profile info.",
+                  "You can update your store info.",
                   style: TextStyle(
                       color: Colors.grey,
                       fontSize: 22,

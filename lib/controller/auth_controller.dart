@@ -4,15 +4,19 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lalaco/const.dart';
+import 'package:lalaco/controller/controllers.dart';
 import 'package:lalaco/model/user.dart';
 import 'package:lalaco/service/remote_service/remote_auth_service.dart';
 import 'package:lalaco/service/local_service/local_auth_service.dart';
 
 import 'package:http/http.dart' as http;
 
+import '../model/store.dart';
+
 class AuthController extends GetxController {
   static AuthController instance = Get.find();
   Rxn<User> user = Rxn<User>();
+  Rxn<Store> store = Rxn<Store>();
   final LocalAuthService _localAuthService = LocalAuthService();
   final ImagePicker _picker = ImagePicker();
 
@@ -23,13 +27,16 @@ class AuthController extends GetxController {
   }
 
   Future<void> uploadProfilePicture() async {
-    final XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedImage =
+        await _picker.pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {
       try {
         EasyLoading.show(status: 'Uploading...', dismissOnTap: false);
-        final url = Uri.parse('$baseUrl/users/upload_image'); // Replace with your upload image endpoint URL
+        final url = Uri.parse(
+            '$baseUrl/users/upload_image'); // Replace with your upload image endpoint URL
         final request = http.MultipartRequest('POST', url);
-        request.files.add(await http.MultipartFile.fromPath('image', pickedImage.path));
+        request.files
+            .add(await http.MultipartFile.fromPath('image', pickedImage.path));
         final response = await request.send();
         if (response.statusCode == 200) {
           // Image uploaded successfully
@@ -114,6 +121,17 @@ class AuthController extends GetxController {
         //   user.value = userFromJson(userResult.body);
         await _localAuthService.addToken(token: token);
         await _localAuthService.addUser(user: _user);
+
+        if (_user.user_type == 'Vendor') {
+          Store? _store = await storeController.getStoreByUserId(userID: int.parse(_user.id));
+
+          if (_store != null) {
+            store.value = _store;
+            await _localAuthService.addStore(store:_store);
+          }
+        }
+
+
         EasyLoading.showSuccess("Welcome to Lalaco!");
         Navigator.of(Get.overlayContext!).pop();
         // }
@@ -126,6 +144,68 @@ class AuthController extends GetxController {
     } catch (e) {
       debugPrint(e.toString());
       EasyLoading.showError('Something wrong. Try again!');
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  Future<void> updateProfile(
+      {required int id,
+      required String name,
+      required String email,
+      required String phone_number}) async {
+    try {
+      EasyLoading.show(status: 'Updating...', dismissOnTap: false);
+      var result = await RemoteAuthService().updateProfile(
+        token: _localAuthService.getToken(),
+        id: id,
+        name: name,
+        email: email,
+        phone_number: phone_number,
+      );
+      if (result.statusCode == 200) {
+        // Profile updated successfully
+        EasyLoading.showSuccess('Profile updated successfully');
+
+        // Optionally, you can update the user object with the updated profile data
+        user.value?.name = name;
+        user.value?.email = email;
+        user.value?.phone_number = phone_number;
+      } else {
+        // Profile update failed
+        EasyLoading.showError('Profile update failed');
+      }
+    } catch (e) {
+      // Error occurred during profile update
+      EasyLoading.showError('Profile update failed');
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  Future<void> updatePassword({
+    required int id,
+    required String current_password,
+    required String new_password,
+  }) async {
+    try {
+      EasyLoading.show(status: 'Updating...', dismissOnTap: false);
+      var result = await RemoteAuthService().updatePassword(
+        token: _localAuthService.getToken(),
+        id: id,
+        current_password: current_password,
+        new_password: new_password,
+      );
+      if (result.statusCode == 200) {
+        EasyLoading.showSuccess('Password updated successfully');
+        Navigator.of(Get.overlayContext!).pop();
+      } else {
+        // Profile update failed
+        EasyLoading.showError('Password update failed');
+      }
+    } catch (e) {
+      // Error occurred during profile update
+      EasyLoading.showError('Password update failed');
     } finally {
       EasyLoading.dismiss();
     }

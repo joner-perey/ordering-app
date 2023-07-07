@@ -70,4 +70,44 @@ class RemoteAuthService {
     );
     return response;
   }
+
+  Future<dynamic> updateProfile(
+      {required String? token,
+      required id,
+      required name,
+      required email,
+      required phone_number}) async {
+    var body = {"name": name, "email": email, "phone_number": phone_number};
+    final response = await http.post(
+      Uri.parse('$baseUrl/api/update/$id'),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token"
+      },
+      body: jsonEncode(body),
+    );
+    return response;
+  }
+
+  Future<dynamic> updatePassword({
+    required String? token,
+    required id,
+    required current_password,
+    required new_password,
+  }) async {
+    var body = {
+      "current_password": current_password,
+      "new_password": new_password
+    };
+    final response = await http.post(
+      Uri.parse('$baseUrl/api/update/$id/update_password'),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token"
+      },
+      body: jsonEncode(body),
+    );
+    print(response.body);
+    return response;
+  }
 }
