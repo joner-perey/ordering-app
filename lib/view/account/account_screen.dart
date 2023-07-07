@@ -6,6 +6,7 @@ import 'package:lalaco/controller/controllers.dart';
 import 'package:lalaco/view/account/auth/sign_up_screen.dart';
 import 'package:lalaco/view/order/order_screen.dart';
 import 'package:lalaco/view/profile/profile_screen.dart';
+import 'package:lalaco/view/schedule/schedule_screen.dart';
 
 import 'auth/sign_in_screen.dart';
 
@@ -114,7 +115,12 @@ class AccountScreen extends StatelessWidget {
               }),
           Obx(() {
             if (authController.user.value?.user_type.toString() == 'Vendor') {
-              return buildAccountCard(title: "My Schedule", onClick: () {});
+              return buildAccountCard(title: "My Schedule", onClick: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ScheduleScreen()));
+              });
             } else {
               // Return another widget or null if the condition is false
               return SizedBox.shrink();
