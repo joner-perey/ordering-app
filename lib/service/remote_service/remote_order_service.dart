@@ -1,12 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:lalaco/const.dart';
 import 'package:lalaco/model/order.dart';
-import 'package:lalaco/model/product.dart';
-import 'package:lalaco/model/store.dart';
 
 class RemoteOrderService {
   var client = http.Client();
@@ -14,7 +9,6 @@ class RemoteOrderService {
 
   Future<dynamic> fetchCustomerOrders({required String user_id}) async {
     var response = await http.get(Uri.parse('$remoteUrl/customer/?user_id=$user_id'));
-    print(response.statusCode);
     final parsedJson = jsonDecode(response.body);
     final results = parsedJson['orders'];
 
@@ -54,9 +48,6 @@ class RemoteOrderService {
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(body),
     );
-    print(body);
-    print(response.statusCode);
-    print(response.body);
     return response;
   }
 }

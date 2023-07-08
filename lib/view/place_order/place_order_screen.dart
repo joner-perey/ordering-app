@@ -37,7 +37,7 @@ class _PlaceOrderScreen extends State<PlaceOrderScreen> {
   String? selectedOrderType;
   String? deliveryAddress;
 
-  late LatLng addressPosition;
+  late LatLng addressPosition = LatLng(0, 0);
 
   @override
   void dispose() {
@@ -135,9 +135,9 @@ class _PlaceOrderScreen extends State<PlaceOrderScreen> {
                     child: Column(
                       children: List<Widget>.generate(
                         cartItemsController.cartItemList.length,
-                        (index) {
+                            (index) {
                           final cartItem =
-                              cartItemsController.cartItemList[index];
+                          cartItemsController.cartItemList[index];
                           final image = cartItem.product.image;
                           final name = cartItem.product.name;
                           final price = cartItem.product.price.toString();
@@ -147,7 +147,7 @@ class _PlaceOrderScreen extends State<PlaceOrderScreen> {
                               Container(
                                 decoration: BoxDecoration(
                                   border:
-                                      Border.all(color: Colors.grey.shade400),
+                                  Border.all(color: Colors.grey.shade400),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 padding: const EdgeInsets.all(5),
@@ -170,7 +170,7 @@ class _PlaceOrderScreen extends State<PlaceOrderScreen> {
                                         alignment: Alignment.centerLeft,
                                         child: Column(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               'Product: $name',

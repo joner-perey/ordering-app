@@ -19,7 +19,7 @@ class OrderController extends GetxController {
     super.onInit();
   }
 
-  void fetchOrderToCustomer({required String user_id}) async {
+  Future<dynamic> fetchOrderToCustomer({required String user_id}) async {
     try {
       isOrderLoading(true);
       //call api

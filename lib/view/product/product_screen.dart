@@ -43,7 +43,7 @@ class ProductScreen extends StatelessWidget {
             ],
           ),
           Obx(() {
-            return authController.user.value != null
+            return authController.user.value?.user_type.toString() == 'Vendor'
                 ? Positioned(
                     bottom: 16.0,
                     right: 16.0,

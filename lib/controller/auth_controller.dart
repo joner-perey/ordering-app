@@ -5,13 +5,12 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lalaco/const.dart';
 import 'package:lalaco/controller/controllers.dart';
+import 'package:lalaco/model/store.dart';
 import 'package:lalaco/model/user.dart';
 import 'package:lalaco/service/remote_service/remote_auth_service.dart';
 import 'package:lalaco/service/local_service/local_auth_service.dart';
 
 import 'package:http/http.dart' as http;
-
-import '../model/store.dart';
 
 class AuthController extends GetxController {
   static AuthController instance = Get.find();
@@ -123,14 +122,14 @@ class AuthController extends GetxController {
         await _localAuthService.addUser(user: _user);
 
         if (_user.user_type == 'Vendor') {
-          Store? _store = await storeController.getStoreByUserId(userID: int.parse(_user.id));
+          Store? _store = await storeController.getStoreByUserId(
+              userID: int.parse(_user.id));
 
           if (_store != null) {
             store.value = _store;
-            await _localAuthService.addStore(store:_store);
+            await _localAuthService.addStore(store: _store);
           }
         }
-
 
         EasyLoading.showSuccess("Welcome to Lalaco!");
         Navigator.of(Get.overlayContext!).pop();
