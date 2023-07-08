@@ -32,7 +32,7 @@ class AuthController extends GetxController {
       try {
         EasyLoading.show(status: 'Uploading...', dismissOnTap: false);
         final url = Uri.parse(
-            '$baseUrl/users/upload_image'); // Replace with your upload image endpoint URL
+            '$baseUrl/api/users/${authController.user.value!.id}/upload_image'); // Replace with your upload image endpoint URL
         final request = http.MultipartRequest('POST', url);
         request.files
             .add(await http.MultipartFile.fromPath('image', pickedImage.path));
@@ -41,15 +41,19 @@ class AuthController extends GetxController {
           // Image uploaded successfully
           final responseData = await response.stream.bytesToString();
           final message = json.decode(responseData)['message'];
+          final userResponse = User.fromJson(json.decode(responseData)['user']);
           EasyLoading.showSuccess(message);
+          // user.value = _localAuthService.getUser();
           // Optionally, you can update the user's profile image in the user object
-          // user.value?.image = imageFileName;
+          user.value = userResponse;
         } else {
           // Image upload failed
+          print(response.statusCode);
           EasyLoading.showError('Image upload failed');
         }
       } catch (e) {
         // Error occurred during image upload
+        print(e);
         EasyLoading.showError('Image upload failed');
       } finally {
         EasyLoading.dismiss();
