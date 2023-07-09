@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -125,6 +126,11 @@ class AuthController extends GetxController {
         //   user.value = userFromJson(userResult.body);
         await _localAuthService.addToken(token: token);
         await _localAuthService.addUser(user: _user);
+
+
+        // update fcm token
+        final fcmToken = await FirebaseMessaging.instance.getToken();
+        await RemoteAuthService().updateFcmToken(auth_token: token, fcm_token: fcmToken!);
 
         if (_user.user_type == 'Vendor') {
           Store? _store = await storeController.getStoreByUserId(userID: int.parse(_user.id));

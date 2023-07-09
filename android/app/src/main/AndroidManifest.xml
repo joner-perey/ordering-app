@@ -10,7 +10,7 @@
 
 
     <application
-        android:label="google_maps_demo"
+        android:label="Lalaco"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

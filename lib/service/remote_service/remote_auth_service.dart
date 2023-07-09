@@ -110,4 +110,23 @@ class RemoteAuthService {
     print(response.body);
     return response;
   }
+
+  Future<dynamic> updateFcmToken({
+    required String? auth_token,
+    required String fcm_token,
+  }) async {
+    var body = {
+      "fcm_token": fcm_token
+    };
+    final response = await http.put(
+      Uri.parse('$baseUrl/api/users/update_fcm_token'),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $auth_token"
+      },
+      body: jsonEncode(body),
+    );
+    print(response.body);
+    return response;
+  }
 }
