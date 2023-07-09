@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:lalaco/const.dart';
 import 'package:lalaco/model/product.dart';
 import 'package:lalaco/model/store.dart';
+import 'package:lalaco/view/order/order_details_screen.dart';
+import 'package:lalaco/view/product/components/product_card.dart';
+import 'package:lalaco/view/product/product_screen.dart';
+import 'package:lalaco/view/product_details/product_details_screen.dart';
 import 'package:shimmer/shimmer.dart';
-
 
 class PopularProductCard extends StatelessWidget {
   final Product product;
@@ -20,42 +23,51 @@ class PopularProductCard extends StatelessWidget {
         elevation: 8,
         shadowColor: Colors.grey.shade300,
         borderRadius: BorderRadius.circular(10),
-        child: Container(
-          margin: const EdgeInsets.all(10),
-          width: 120,
-          child: Column(
-            children: [
-              AspectRatio(
-                aspectRatio: 0.9,
-                child: CachedNetworkImage(
-                  imageUrl: '$baseUrl/storage/uploads/${product.image}',
-                  placeholder: (context, url) => Shimmer.fromColors(
-                    highlightColor: Colors.white,
-                    baseColor: Colors.grey.shade300,
-                    child: Container(
-                      color: Colors.grey,
-                      padding: const EdgeInsets.all(15),
-                      margin: const EdgeInsets.symmetric(horizontal: 25),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ProductDetailsScreen(product: product)));
+          },
+          child: Container(
+            margin: const EdgeInsets.all(10),
+            width: 120,
+            child: Column(
+              children: [
+                AspectRatio(
+                  aspectRatio: 0.9,
+                  child: CachedNetworkImage(
+                    imageUrl: '$baseUrl/storage/uploads/${product.image}',
+                    placeholder: (context, url) => Shimmer.fromColors(
+                      highlightColor: Colors.white,
+                      baseColor: Colors.grey.shade300,
+                      child: Container(
+                        color: Colors.grey,
+                        padding: const EdgeInsets.all(15),
+                        margin: const EdgeInsets.symmetric(horizontal: 25),
+                      ),
                     ),
-                  ),
-                  errorWidget: (context, url, error) => const Center(
-                    child: Icon(
-                      Icons.error_outline,
-                      color: Colors.grey,
+                    errorWidget: (context, url, error) => const Center(
+                      child: Icon(
+                        Icons.error_outline,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, bottom: 10),
-                child: Text(
-                  product.name,
-                  style: const TextStyle(color: Colors.black, fontSize: 14),
-                  maxLines: 1,
-                ),
-              )
-            ],
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, bottom: 10),
+                  child: Text(
+                    product.name,
+                    style: const TextStyle(color: Colors.black, fontSize: 14),
+                    maxLines: 1,
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
