@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lalaco/controller/controllers.dart';
 import 'package:lalaco/model/schedule.dart';
 import 'package:lalaco/view/schedule/schedule_form.dart';
+import 'package:lalaco/view/select_location/view_location.dart';
 
 class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({Key? key}) : super(key: key);
@@ -112,112 +114,115 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         appBar: AppBar(
           title: const Text('Schedule'),
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
-            SizedBox(
-              width: 350,
-              child: scheduleController.scheduleList.length == 0 ? Center(child: const Text('You Have No Schedule', style: TextStyle(
-                fontSize: 18,
-                color: Colors.black54
-              ),)) : Column(
-                children: List<Widget>.generate(
-                  scheduleController.scheduleList.length,
-                      (index) {
-                    final schedule = scheduleController.scheduleList[index];
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                SizedBox(
+                  child: scheduleController.scheduleList.length == 0 ? const Center(child: Text('You Have No Schedule', style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black54
+                  ),)) : Column(
+                    children: List<Widget>.generate(
+                      scheduleController.scheduleList.length,
+                          (index) {
+                        final schedule = scheduleController.scheduleList[index];
 
 
-                    return Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade400),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          padding: const EdgeInsets.all(5),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Column(
-                              //   children: [
-                              //     Image.network(
-                              //       '$baseUrl/storage/uploads/$image',
-                              //       width: 90,
-                              //       height: 100,
-                              //       fit: BoxFit.cover,
-                              //     ),
-                              //   ],
-                              // ),
-                              SizedBox(width: 8),
-                              Expanded(
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: [
-
-                                      Text(
-                                        'Location: ${schedule.location_description}',
-                                        style: const TextStyle(
-                                          color: Colors.black54,
-                                          fontSize: 18
-                                        ),
-                                      ),
-                                      SizedBox(height: 5),
-                                      Text(
-                                        'Days: ${displayDays(schedule)}',
-                                        style: const TextStyle(
-                                            color: Colors.black54,
-                                            fontSize: 18
-                                        ),
-                                      ),
-                                      SizedBox(height: 5),
-                                      Text(
-                                        'Time: ${displayTime(schedule)}',
-                                        style: const TextStyle(
-                                            color: Colors.black54,
-                                            fontSize: 18
-                                        ),
-                                      ),
-                                      SizedBox(height: 5),
-                                      Row(
-                                        children: [
-                                          ElevatedButton(onPressed: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) => ScheduleForm(schedule: schedule,))).then((value) {
-                                              fetchSchedules();
-                                            });
-                                          }, child: Text('Edit')),
-                                          SizedBox(width: 8),
-                                          ElevatedButton(onPressed: () {
-                                            showDeleteDialog(context, schedule.id);
-                                          }, child: Text('Delete')),
-                                          // IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
-                                          // IconButton(onPressed: () {}, icon: const Icon(Icons.delete)),
-                                        ],
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                        return Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade400),
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                            ],
-                          ),
-                        ),
-                        if (index !=
-                            cartItemsController.cartItemList.length - 1)
-                          const SizedBox(height: 10),
-                      ],
-                    );
-                  },
+                              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+
+                                          Text(
+                                            'Location: ${schedule.location_description}',
+                                            style: const TextStyle(
+                                              color: Colors.black54,
+                                              fontSize: 18
+                                            ),
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Text(
+                                            'Days: ${displayDays(schedule)}',
+                                            style: const TextStyle(
+                                                color: Colors.black54,
+                                                fontSize: 18
+                                            ),
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Text(
+                                            'Time: ${displayTime(schedule)}',
+                                            style: const TextStyle(
+                                                color: Colors.black54,
+                                                fontSize: 18
+                                            ),
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Row(
+                                            children: [
+                                              const Text('View Location'),
+                                              IconButton(onPressed: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) => ViewLocationPage(location: LatLng(double.parse(schedule.latitude), double.parse(schedule.longitude)),)));
+                                              }, icon: const Icon(Icons.location_on, color: Colors.orangeAccent,)),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              ElevatedButton(onPressed: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) => ScheduleForm(schedule: schedule,))).then((value) {
+                                                  fetchSchedules();
+                                                });
+                                              }, child: const Text('Edit')),
+                                              const SizedBox(width: 8),
+                                              ElevatedButton(onPressed: () {
+                                                showDeleteDialog(context, schedule.id);
+                                              }, child: const Text('Delete')),
+                                              // IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
+                                              // IconButton(onPressed: () {}, icon: const Icon(Icons.delete)),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {

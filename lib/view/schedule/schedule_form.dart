@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lalaco/component/input_text_field.dart';
 import 'package:lalaco/controller/controllers.dart';
@@ -59,6 +60,42 @@ class _ScheduleFormState extends State<ScheduleForm> {
     setState(() {
       addressPosition = position;
     });
+  }
+
+  bool validate() {
+    bool hasSelectedDays = false;
+
+    for (var i = 0 ; i < days.length; i++) {
+      if (days[i]) {
+        hasSelectedDays = true;
+        break;
+      }
+    }
+
+    if (addressPosition == null) {
+      EasyLoading.showError('Please Select Location');
+      return false;
+    }
+
+    if (startTime == null) {
+      EasyLoading.showError('Please Select Start Time');
+      return false;
+    }
+
+    if (endTime == null) {
+      EasyLoading.showError('Please Select End Time');
+      return false;
+    }
+
+
+
+
+    if (!hasSelectedDays) {
+      EasyLoading.showError('Please Select Day');
+      return false;
+    }
+
+    return true;
   }
 
   @override
@@ -294,6 +331,12 @@ class _ScheduleFormState extends State<ScheduleForm> {
                 title: widget.schedule == null ? "Add" : "Update",
                 onClick: () {
                   if (_formKey.currentState!.validate()) {
+                    bool isValid = validate();
+
+                    if (!isValid) {
+                      return;
+                    }
+
                     String formattedStartTime = '${startTime?.hour.toString().padLeft(2, '0')}:${startTime?.minute.toString().padLeft(2, '0')}';
                     String formattedEndTime = '${endTime?.hour.toString().padLeft(2, '0')}:${endTime?.minute.toString().padLeft(2, '0')}';
 

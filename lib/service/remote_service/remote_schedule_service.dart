@@ -53,7 +53,7 @@ class RemoteScheduleService {
     };
     var response = await client.put(
       Uri.parse('$baseUrl/api/schedules/$schedule_id'),
-      headers: {"Content-Type": "application/json"},
+      headers: {"Content-Type": "application/json", "Accept": "application/json"},
       body: jsonEncode(body),
     );
     print(body);
@@ -82,7 +82,7 @@ class RemoteScheduleService {
     };
     var response = await client.post(
       Uri.parse('$baseUrl/api/schedules'),
-      headers: {"Content-Type": "application/json"},
+      headers: {"Content-Type": "application/json", "Accept": "application/json"},
       body: jsonEncode(body),
     );
     print(body);

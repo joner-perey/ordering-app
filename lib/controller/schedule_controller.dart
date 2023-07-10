@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -56,8 +58,8 @@ class ScheduleController extends GetxController {
       if (result.statusCode == 201 || result.statusCode == 200) {
         EasyLoading.showSuccess("Schedule Updated");
         Navigator.of(Get.overlayContext!).pop();
-      } else {
-        EasyLoading.showError('1!');
+      } else if (result.statusCode == 422) {
+        EasyLoading.showError(jsonDecode(result.body)['message']);
       }
     } catch (e) {
       EasyLoading.showError('2!');
@@ -93,8 +95,8 @@ class ScheduleController extends GetxController {
       if (result.statusCode == 201 || result.statusCode == 200) {
         EasyLoading.showSuccess("Schedule Added");
         Navigator.of(Get.overlayContext!).pop();
-      } else {
-        EasyLoading.showError('1!');
+      } else if (result.statusCode == 422) {
+        EasyLoading.showError(jsonDecode(result.body)['message']);
       }
     } catch (e) {
       EasyLoading.showError('2!');
