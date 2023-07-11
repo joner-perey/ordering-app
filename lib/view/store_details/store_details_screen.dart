@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:lalaco/controller/controllers.dart';
 import 'package:lalaco/model/product.dart';
+import 'package:lalaco/model/schedule.dart';
 import 'package:lalaco/model/store.dart';
 import 'package:lalaco/view/home/components/popular_product/popular_product.dart';
 import 'package:lalaco/view/home/components/popular_product/popular_product_loading.dart';
@@ -10,6 +12,8 @@ import 'package:lalaco/view/home/components/section_title.dart';
 import 'package:lalaco/view/product/product_screen.dart';
 import 'package:lalaco/view/product_details/compnents/product_carousel_slider.dart';
 import 'package:lalaco/view/store_details/components/store_carousel_slider.dart';
+
+import '../select_location/view_location.dart';
 
 class StoreDetailsScreen extends StatefulWidget {
   final Store store;
@@ -21,9 +25,11 @@ class StoreDetailsScreen extends StatefulWidget {
 }
 
 class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
+
+  final ExpansionTileController controller = ExpansionTileController();
+
   @override
   void initState() {
-
     WidgetsBinding.instance.addPostFrameCallback((_) async {
 
       await productController.getProductsPerStore(store_id: 1);
@@ -34,8 +40,23 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
     super.initState();
   }
 
+  String getStrScheduleNow() {
+    var scheduleNow = widget.store.getScheduleNow();
+
+    if (scheduleNow == null) {
+      return '';
+    }
+
+    var endTime = scheduleNow.getEndTime();
+
+    return 'Now Open until ${endTime.format(context)}';
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    var scheduleNow =  widget.store.getScheduleNow();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Stores'),
@@ -76,6 +97,79 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                   widget.store.store_description,
                   style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
                 ),
+              ),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    const Icon(Icons.schedule, color: Colors.orangeAccent,),
+                    const SizedBox(width: 8),
+                    scheduleNow == null ? const Text('Closed Now', style: TextStyle(color: Colors.red),) : Text(getStrScheduleNow())
+                  ],
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.location_on, color: Colors.orangeAccent,),
+                        const SizedBox(width: 8),
+                        scheduleNow == null ? const Text('Closed Now', style: TextStyle(color: Colors.red),) : Text(widget.store.getScheduleNow()!.location_description)
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        TextButton(onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ViewLocationPage(location: LatLng(double.parse(scheduleNow!.latitude), double.parse(scheduleNow!.longitude)),)));
+                        }, child: const Text('View Location', style: TextStyle(color: Colors.orangeAccent),)),
+                        const Icon(Icons.chevron_right, color: Colors.orangeAccent,)
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              ExpansionTile(
+                controller: controller,
+                title: const Text('View Schedule'),
+                children: [
+                  widget.store.getScheduleNow() == null ?
+                  Text('Closed Now')
+                  :
+                  ListTile(
+                        title: Text('Now Open - ${scheduleNow!.location_description}'),
+                    subtitle: Text(' ${scheduleNow.getStartTime().format(context)} - ${scheduleNow.getEndTime().format(context)}'),
+                    trailing: IconButton(onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ViewLocationPage(location: LatLng(double.parse(scheduleNow!.latitude), double.parse(scheduleNow!.longitude)),)));
+                    }, icon: const Icon(Icons.location_on, color: Colors.orangeAccent,)),
+                  ),
+                  Divider(height: 1),
+                  ...List<Widget>.generate(widget.store.schedules.length, (index) {
+                    var schedule = widget.store.schedules[index];
+                    return ListTile(
+                      title: Text(schedule.location_description),
+                      subtitle: Text('${schedule.formatDays()} ${schedule.getStartTime().format(context)} - ${schedule.getEndTime().format(context)}'),
+                      trailing: IconButton(onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ViewLocationPage(location: LatLng(double.parse(schedule.latitude), double.parse(schedule.longitude)),)));
+                      }, icon: const Icon(Icons.location_on, color: Colors.orangeAccent,)),
+                    );
+                  })
+          ]
+                ,
               ),
               const SizedBox(height: 10),
               const SectionTitle(
