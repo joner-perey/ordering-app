@@ -65,12 +65,12 @@ class _OrderTypeWidgetState extends State<OrderTypeWidget> {
                     .then((value) {
                   LatLng position = value as LatLng;
                   widget.onUpdateSelectedPosition(value);
-                  SnackBar snackBar = SnackBar(
-                    content: Text(
-                        'latitude: ${position.latitude}, longitude: ${position.longitude}'),
-                  );
+                  // SnackBar snackBar = SnackBar(
+                  //   content: Text(
+                  //       'latitude: ${position.latitude}, longitude: ${position.longitude}'),
+                  // );
 
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  // ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 });
               },
               child: const Text('Select Location')),

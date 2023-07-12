@@ -127,7 +127,7 @@ class AuthController extends GetxController {
 
         if (_user.user_type == 'Vendor') {
           Store? _store = await storeController.getStoreByUserId(
-              userID: int.parse(_user.id));
+              user_id: int.parse(_user.id));
 
           if (_store != null) {
             store.value = _store;

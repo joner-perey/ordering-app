@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:lalaco/model/product.dart';
 import 'package:lalaco/model/store.dart';
@@ -27,18 +30,18 @@ class StoreController extends GetxController {
       if (result != null) {
         //assign api result
         storeList.assignAll(result);
-
       }
     } finally {
       isStoreLoading(false);
     }
   }
 
-  Future<Store?> getStoreByUserId({ required int userID }) async {
+  Future<Store?> getStoreByUserId({required int user_id}) async {
     try {
       isStoreLoading(true);
       //call api
-      var result = await RemoteStoreService().fetchStoreByUserId(userId: userID);
+      var result =
+          await RemoteStoreService().fetchStoreByUserId(user_id: user_id);
       if (result != null) {
         return result;
       }
@@ -62,4 +65,43 @@ class StoreController extends GetxController {
     }
   }
 
+  Future<void> updateStore({
+    required int id,
+    required String store_name,
+    required File? image,
+    required String store_description,
+    required String location_description,
+    required String longitude,
+    required String latitude,
+  }) async {
+    try {
+      EasyLoading.show(status: 'Updating...', dismissOnTap: false);
+      var result = await RemoteStoreService().updateStore(
+        id: id,
+        store_name: store_name,
+        image: image,
+        store_description: store_description,
+        location_description: location_description,
+        longitude: longitude,
+        latitude: latitude,
+      );
+      if (result.statusCode == 200) {
+        // Profile updated successfully
+        EasyLoading.showSuccess('Store updated successfully');
+
+        // Optionally, you can update the user object with the updated profile data
+        // user.value?.name = name;
+        // user.value?.email = email;
+        // user.value?.phone_number = phone_number;
+      } else {
+        // Profile update failed
+        EasyLoading.showError('Profile update failed');
+      }
+    } catch (e) {
+      // Error occurred during profile update
+      EasyLoading.showError('Profile update failed');
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
 }

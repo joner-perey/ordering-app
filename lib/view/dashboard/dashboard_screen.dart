@@ -3,13 +3,31 @@ import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:lalaco/controller/controllers.dart';
 import 'package:lalaco/controller/dashboard_controller.dart';
 import 'package:get/get.dart';
+import 'package:lalaco/model/store.dart';
 import 'package:lalaco/view/account/account_screen.dart';
 import 'package:lalaco/view/home/components/home_screen.dart';
 import 'package:lalaco/view/map/map_screen.dart';
 import 'package:lalaco/view/product/product_screen.dart';
+import 'package:lalaco/view/store_details/store_details_screen.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreen();
+}
+
+class _DashboardScreen extends State<DashboardScreen> {
+  late Store store;
+
+  @override
+  void initState() {
+    if (authController.user.value != null &&
+        authController.user.value?.user_type == 'Vendor') {
+      fetchStoreData();
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,5 +77,20 @@ class DashboardScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> fetchStoreData() async {
+    try {
+      if (authController.user.value != null) {
+        var result = await storeController.getStoreByUserId(
+            user_id: int.parse(authController.user.value!.id));
+        setState(() {
+          store = result!;
+        });
+        print(store.id);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }
