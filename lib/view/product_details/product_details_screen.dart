@@ -177,11 +177,57 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
           onPressed: () {
             if (authController.user.value != null) {
-              cartItemsController.addToCart(
-                  product_id: widget.product.id,
-                  quantity: _qty,
-                  user_id: int.parse(authController.user.value!.id),
-                  store_id: widget.product.store_id);
+              int? lastStoreId = cartItemsController.cartItemList.isNotEmpty
+                  ? cartItemsController.cartItemList.last.store_id
+                  : null;
+              if (lastStoreId == widget.product.store_id ||
+                  lastStoreId == null) {
+                  cartItemsController.addToCart(
+                      product_id: widget.product.id,
+                      quantity: _qty,
+                      user_id: int.parse(authController.user.value!.id),
+                      store_id: widget.product.store_id);
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Add to Cart'),
+                      content: const Text(
+                          'The product you want to add has different store than the current product/s in cart?'),
+                      actions: [
+                        TextButton(
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: const Text(
+                            'Confirm',
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          onPressed: () {
+                            cartItemsController.addToCart(
+                                product_id: widget.product.id,
+                                quantity: _qty,
+                                user_id: int.parse(authController.user.value!.id),
+                                store_id: widget.product.store_id);
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
             } else {
               Navigator.push(
                   context,

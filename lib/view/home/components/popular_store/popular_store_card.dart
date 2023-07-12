@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:lalaco/const.dart';
 import 'package:lalaco/model/category.dart';
 import 'package:lalaco/model/store.dart';
+import 'package:lalaco/view/store_details/store_details_screen.dart';
 import 'package:shimmer/shimmer.dart';
 
 class PopularStoreCard extends StatelessWidget {
   final Store store;
-  const PopularStoreCard({Key? key,
-    required this.store
-  }) : super(key: key);
+
+  const PopularStoreCard({Key? key, required this.store}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,22 +21,29 @@ class PopularStoreCard extends StatelessWidget {
           elevation: 8,
           shadowColor: Colors.grey.shade300,
           borderRadius: BorderRadius.circular(10),
-          child: Container(
-            width: 270,
-            height: 140,
-            decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(image: imageProvider, fit: BoxFit.cover)
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Text(
-                store.store_name,
-                style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => StoreDetailsScreen(store: store)));
+            },
+            child: Container(
+              width: 270,
+              height: 140,
+              decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(10),
+                  image:
+                      DecorationImage(image: imageProvider, fit: BoxFit.cover)),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Text(
+                  store.store_name,
+                  style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
               ),
             ),
@@ -54,8 +61,7 @@ class PopularStoreCard extends StatelessWidget {
               height: 140,
               decoration: BoxDecoration(
                   color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(10)
-              ),
+                  borderRadius: BorderRadius.circular(10)),
             ),
           ),
         ),
@@ -68,8 +74,7 @@ class PopularStoreCard extends StatelessWidget {
             height: 140,
             decoration: BoxDecoration(
                 color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(10)
-            ),
+                borderRadius: BorderRadius.circular(10)),
             child: const Center(
               child: Icon(
                 Icons.error_outline,

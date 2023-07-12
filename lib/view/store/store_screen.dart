@@ -44,22 +44,22 @@ class StoreScreen extends StatelessWidget {
               ),
             ],
           ),
-          Positioned(
-            bottom: 16.0, // Adjust the position as per your requirement
-            right: 16.0, // Adjust the position as per your requirement
-            child: FloatingActionButton(
-              heroTag: 'addButton',
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AddProductScreen()));
-              },
-              child: Icon(Icons.add),
-              backgroundColor:
-              const Color(0xffff8900), // Set your desired color here
-            ),
-          ),
+          // Positioned(
+          //   bottom: 16.0, // Adjust the position as per your requirement
+          //   right: 16.0, // Adjust the position as per your requirement
+          //   child: FloatingActionButton(
+          //     heroTag: 'addButton',
+          //     onPressed: () {
+          //       Navigator.push(
+          //           context,
+          //           MaterialPageRoute(
+          //               builder: (context) => const AddProductScreen()));
+          //     },
+          //     child: Icon(Icons.add),
+          //     backgroundColor:
+          //     const Color(0xffff8900), // Set your desired color here
+          //   ),
+          // ),
         ],
       ),
     );

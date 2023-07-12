@@ -160,35 +160,39 @@ class _MainHeaderState extends State<MainHeader> {
               }
             },
             child: Obx(() {
-              final String cartItemCount = authController.user.value != null
-                  ? cartItemsController.cartItemList.length?.toString() ?? ''
-                  : '';
+              if (authController.user.value?.user_type == 'Vendor') {
+                return SizedBox.shrink();
+              } else {
+                final String cartItemCount = authController.user.value != null
+                    ? cartItemsController.cartItemList.length?.toString() ?? ''
+                    : '';
 
-              return badges.Badge(
-                badgeContent: Text(
-                  cartItemCount,
-                  style: const TextStyle(color: Colors.white),
-                ),
-                child: Container(
-                  height: 46,
-                  width: 46,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.6),
-                        blurRadius: 8,
-                      ),
-                    ],
+                return badges.Badge(
+                  badgeContent: Text(
+                    cartItemCount,
+                    style: const TextStyle(color: Colors.white),
                   ),
-                  padding: const EdgeInsets.all(12),
-                  child: const Icon(
-                    Icons.shopping_cart_outlined,
-                    color: Colors.grey,
+                  child: Container(
+                    height: 46,
+                    width: 46,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.6),
+                          blurRadius: 8,
+                        ),
+                      ],
+                    ),
+                    padding: const EdgeInsets.all(12),
+                    child: const Icon(
+                      Icons.shopping_cart_outlined,
+                      color: Colors.grey,
+                    ),
                   ),
-                ),
-              );
+                );
+              }
             }),
           ),
           const SizedBox(
