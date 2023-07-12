@@ -71,6 +71,18 @@ class RemoteAuthService {
     return response;
   }
 
+  Future<dynamic> getUser({
+    required int userId,
+  }) async {
+    var response = await client.get(
+      Uri.parse('$baseUrl/api/users/$userId'),
+      headers: {
+        "Content-Type": "application/json"
+      },
+    );
+    return response;
+  }
+
   Future<dynamic> updateProfile(
       {required String? token,
       required id,

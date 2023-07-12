@@ -23,19 +23,39 @@ class AuthController extends GetxController {
   @override
   void onInit() async {
     await localAuthService.init();
-    user.value = localAuthService.getUser();
 
-    if (user.value?.user_type == 'Vendor') {
-      Store? _store = await storeController.getStoreByUserId(
-          userID: int.parse(user.value!.id));
+    int? userId = localAuthService.getUserId();
+    if (userId != null) {
+      User? _user = await fetchUser(userId: userId);
 
-      if (_store != null) {
-        store.value = _store;
-        await localAuthService.addStore(store: _store);
+      user.value = _user;
+
+      if (user.value?.user_type == 'Vendor') {
+        Store? _store = await storeController.getStoreByUserId(
+            userID: int.parse(user.value!.id));
+
+        if (_store != null) {
+          store.value = _store;
+          await localAuthService.addStore(store: _store);
+        }
       }
     }
+
+
     super.onInit();
   }
+
+  Future<User?> fetchUser({required int userId}) async {
+    var result = await RemoteAuthService().getUser(userId: userId);
+
+    if (result.statusCode == 200) {
+      var user = User.fromJson(json.decode(result.body)['user']);
+
+      return user;
+    }
+
+    return null;
+}
 
   Future<void> uploadProfilePicture() async {
     final XFile? pickedImage =
@@ -136,6 +156,7 @@ class AuthController extends GetxController {
         //   user.value = userFromJson(userResult.body);
         await localAuthService.addToken(token: token);
         await localAuthService.addUser(user: _user);
+        await localAuthService.addUserId(userId: int.parse(_user.id));
 
 
         // update fcm token

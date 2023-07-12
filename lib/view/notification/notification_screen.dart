@@ -45,10 +45,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              child: notificationController.notificationList.isEmpty ? const Center(child: Text('You Have No Notification', style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black54
-              ),)) : Column(
+              child: notificationController.notificationList.isEmpty ? const Center(child: Padding(
+                padding: EdgeInsets.only(top: 40),
+                child: Text('You Have No Notification', style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black54
+                ),),
+              )) : Column(
                 children: List<Widget>.generate(
                   notificationController.notificationList.length,
                       (index) {
