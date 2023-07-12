@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:lalaco/const.dart';
 import 'package:lalaco/controller/controllers.dart';
 import 'package:lalaco/view/account/auth/sign_up_screen.dart';
+import 'package:lalaco/view/notification/notification_screen.dart';
 import 'package:lalaco/view/order/order_screen.dart';
 import 'package:lalaco/view/profile/profile_screen.dart';
 import 'package:lalaco/view/schedule/schedule_screen.dart';
@@ -144,7 +145,20 @@ class AccountScreen extends StatelessWidget {
               return SizedBox.shrink();
             }
           }),
-          buildAccountCard(title: "Notification", onClick: () {}),
+          buildAccountCard(title: "Notification", onClick: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const NotificationScreen())).then((value) {
+                      String action = value as String;
+                      if (action == 'view_order') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const OrderScreen()));
+                      }
+            });
+          }),
           buildAccountCard(
               title: "Settings",
               onClick: () {

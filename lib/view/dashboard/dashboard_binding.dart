@@ -5,6 +5,7 @@ import 'package:lalaco/controller/cart_items_controller.dart';
 import 'package:lalaco/controller/category_controller.dart';
 import 'package:lalaco/controller/dashboard_controller.dart';
 import 'package:lalaco/controller/home_controller.dart';
+import 'package:lalaco/controller/notification_controller.dart';
 import 'package:lalaco/controller/order_controller.dart';
 import 'package:lalaco/controller/order_detail_controller.dart';
 import 'package:lalaco/controller/product_controller.dart';
@@ -24,5 +25,6 @@ class DashboardBinding extends Bindings {
     Get.put(OrderController());
     Get.put(ScheduleController());
     Get.put(OrderDetailController());
+    Get.put(NotificationController());
   }
 }

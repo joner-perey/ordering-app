@@ -122,16 +122,19 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                         scheduleNow == null ? const Text('Closed Now', style: TextStyle(color: Colors.red),) : Text(widget.store.getScheduleNow()!.location_description)
                       ],
                     ),
-                    Row(
-                      children: [
-                        TextButton(onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ViewLocationPage(location: LatLng(double.parse(scheduleNow!.latitude), double.parse(scheduleNow!.longitude)),)));
-                        }, child: const Text('View Location', style: TextStyle(color: Colors.orangeAccent),)),
-                        const Icon(Icons.chevron_right, color: Colors.orangeAccent,)
-                      ],
+                    Visibility(
+                      visible: scheduleNow != null,
+                      child: Row(
+                        children: [
+                          TextButton(onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ViewLocationPage(location: LatLng(double.parse(scheduleNow!.latitude), double.parse(scheduleNow!.longitude)),)));
+                          }, child: const Text('View Location', style: TextStyle(color: Colors.orangeAccent),)),
+                          const Icon(Icons.chevron_right, color: Colors.orangeAccent,)
+                        ],
+                      ),
                     )
                   ],
                 ),

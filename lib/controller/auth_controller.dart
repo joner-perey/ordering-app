@@ -17,12 +17,23 @@ class AuthController extends GetxController {
   static AuthController instance = Get.find();
   Rxn<User> user = Rxn<User>();
   Rxn<Store> store = Rxn<Store>();
-  final LocalAuthService _localAuthService = LocalAuthService();
+  final LocalAuthService localAuthService = LocalAuthService();
   final ImagePicker _picker = ImagePicker();
 
   @override
   void onInit() async {
-    await _localAuthService.init();
+    await localAuthService.init();
+    user.value = localAuthService.getUser();
+
+    if (user.value?.user_type == 'Vendor') {
+      Store? _store = await storeController.getStoreByUserId(
+          userID: int.parse(user.value!.id));
+
+      if (_store != null) {
+        store.value = _store;
+        await localAuthService.addStore(store: _store);
+      }
+    }
     super.onInit();
   }
 
@@ -123,8 +134,8 @@ class AuthController extends GetxController {
         // var userResult = await RemoteAuthService().getProfile(token: token);
         // if (userResult.statusCode == 200) {
         //   user.value = userFromJson(userResult.body);
-        await _localAuthService.addToken(token: token);
-        await _localAuthService.addUser(user: _user);
+        await localAuthService.addToken(token: token);
+        await localAuthService.addUser(user: _user);
 
 
         // update fcm token
@@ -137,7 +148,7 @@ class AuthController extends GetxController {
 
           if (_store != null) {
             store.value = _store;
-            await _localAuthService.addStore(store: _store);
+            await localAuthService.addStore(store: _store);
           }
         }
 
@@ -166,7 +177,7 @@ class AuthController extends GetxController {
     try {
       EasyLoading.show(status: 'Updating...', dismissOnTap: false);
       var result = await RemoteAuthService().updateProfile(
-        token: _localAuthService.getToken(),
+        token: localAuthService.getToken(),
         id: id,
         name: name,
         email: email,
@@ -200,7 +211,7 @@ class AuthController extends GetxController {
     try {
       EasyLoading.show(status: 'Updating...', dismissOnTap: false);
       var result = await RemoteAuthService().updatePassword(
-        token: _localAuthService.getToken(),
+        token: localAuthService.getToken(),
         id: id,
         current_password: current_password,
         new_password: new_password,
@@ -222,6 +233,6 @@ class AuthController extends GetxController {
 
   void signOut() async {
     user.value = null;
-    await _localAuthService.clear();
+    await localAuthService.clear();
   }
 }
