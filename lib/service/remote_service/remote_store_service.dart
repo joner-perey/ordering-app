@@ -9,8 +9,11 @@ class RemoteStoreService {
   var client = http.Client();
   var remoteUrl = '$baseUrl/api/stores';
 
-  Future<dynamic> fetchStores() async {
-    var response = await http.get(Uri.parse(remoteUrl));
+  Future<dynamic> fetchStores({ required String userId }) async {
+    var response = await http.get(Uri.parse('$remoteUrl?user_id=$userId'), headers: {
+      "Content-Type": "application/json",
+    });
+
     final parsedJson = jsonDecode(response.body);
     final results = parsedJson['stores'];
 

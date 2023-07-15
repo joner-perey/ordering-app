@@ -7,6 +7,8 @@ import 'package:lalaco/service/remote_service/remote_category_service.dart';
 import 'package:lalaco/service/remote_service/remote_store_service.dart';
 import 'package:lalaco/service/remote_service/remote_product_service.dart';
 
+import '../service/local_service/local_auth_service.dart';
+
 class HomeController extends GetxController {
   static HomeController instance = Get.find();
   RxList<AdBanner> adBannerList = List<AdBanner>.empty(growable: true).obs;
@@ -16,8 +18,11 @@ class HomeController extends GetxController {
   RxBool isPopularStoreLoading = false.obs;
   RxBool isPopularProductLoading = false.obs;
 
+  final LocalAuthService localAuthService = LocalAuthService();
+
   @override
-  void onInit() {
+  void onInit() async {
+    await localAuthService.init();
     getAdBanners();
     getPopularStores();
     getPopularProducts();
@@ -44,7 +49,7 @@ class HomeController extends GetxController {
     try {
       isPopularStoreLoading(true);
 
-      var result = await RemoteStoreService().fetchStores();
+      var result = await RemoteStoreService().fetchStores(userId: localAuthService.getUserId()!.toString());
       if (result != null) {
         popularStoreList.assignAll(result);
       }

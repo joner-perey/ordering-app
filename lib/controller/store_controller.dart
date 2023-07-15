@@ -8,6 +8,8 @@ import 'package:lalaco/model/store.dart';
 import 'package:lalaco/service/remote_service/remote_product_service.dart';
 import 'package:lalaco/service/remote_service/remote_store_service.dart';
 
+import '../service/local_service/local_auth_service.dart';
+
 class StoreController extends GetxController {
   static StoreController instance = Get.find();
   RxList<Store> storeList = List<Store>.empty(growable: true).obs;
@@ -16,17 +18,20 @@ class StoreController extends GetxController {
   TextEditingController searchTextEditController = TextEditingController();
   RxString searchVal = ''.obs;
 
+  final LocalAuthService localAuthService = LocalAuthService();
+
   @override
-  void onInit() {
-    getStores();
+  void onInit() async {
+    await localAuthService.init();
+    getStores(userId: localAuthService.getUserId()!.toString());
     super.onInit();
   }
 
-  void getStores() async {
+  void getStores({ required String userId }) async {
     try {
       isStoreLoading(true);
       //call api
-      var result = await RemoteStoreService().fetchStores();
+      var result = await RemoteStoreService().fetchStores(userId: userId);
       if (result != null) {
         //assign api result
         storeList.assignAll(result);

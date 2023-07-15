@@ -63,7 +63,7 @@ class _DashboardScreen extends State<DashboardScreen> {
             onTap: (val) {
               controller.updateIndex(val);
               productController.getProducts();
-              storeController.getStores();
+              storeController.getStores(userId: authController.localAuthService.getUserId()!.toString());
             },
             items: const [
               BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),

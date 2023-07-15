@@ -11,6 +11,7 @@ import 'package:lalaco/controller/order_detail_controller.dart';
 import 'package:lalaco/controller/product_controller.dart';
 import 'package:lalaco/controller/schedule_controller.dart';
 import 'package:lalaco/controller/store_controller.dart';
+import 'package:lalaco/controller/subscription_controller.dart';
 
 class DashboardBinding extends Bindings {
   @override
@@ -26,5 +27,6 @@ class DashboardBinding extends Bindings {
     Get.put(ScheduleController());
     Get.put(OrderDetailController());
     Get.put(NotificationController());
+    Get.put(SubscriptionController());
   }
 }

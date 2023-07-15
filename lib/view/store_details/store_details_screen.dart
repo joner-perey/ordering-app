@@ -12,6 +12,7 @@ import 'package:lalaco/view/home/components/section_title.dart';
 import 'package:lalaco/view/product/product_screen.dart';
 import 'package:lalaco/view/product_details/compnents/product_carousel_slider.dart';
 import 'package:lalaco/view/store_details/components/store_carousel_slider.dart';
+import 'package:lalaco/view/subscription/subscription_screen.dart';
 
 import '../select_location/view_location.dart';
 
@@ -79,7 +80,53 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SubscriptionScreen(storeId: widget.store.id)));
+                        },
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.black54
+                        ),
+                        child: Text('${widget.store.subscription_count} Subscribers')),
+                    SizedBox(width: 8,),
+                    ElevatedButton(onPressed: () {
+                      if (widget.store.is_user_subscribed == 1) {
+                        subscriptionController.deleteSubscription(user_id: authController.user.value!.id, store_id: widget.store.id.toString()).then((value) {
+
+                          setState(() {
+                            widget.store.is_user_subscribed = 0;
+                            widget.store.subscription_count -= 1;
+                          });
+                        });
+                      } else {
+                        subscriptionController.addSubscription(user_id: authController.user.value!.id, store_id: widget.store.id.toString()).then((value) {
+
+                          setState(() {
+                            widget.store.is_user_subscribed = 1;
+                            widget.store.subscription_count += 1;
+                          });
+                        });
+                      }
+
+
+                    },
+                      child: Text(widget.store.is_user_subscribed == 1 ? 'Subscribed' : 'Subscribe'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: widget.store.is_user_subscribed != 1 ? Colors.deepPurpleAccent : Colors.white,
+                        foregroundColor: widget.store.is_user_subscribed != 1 ? Colors.white : Colors.black54
+                      ),
+                    )
+                  ],
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
@@ -109,7 +156,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                   ],
                 ),
               ),
-
+              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Row(
@@ -145,7 +192,10 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                 title: const Text('View Schedule'),
                 children: [
                   widget.store.getScheduleNow() == null ?
-                  Text('Closed Now')
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: Text('Closed Now'),
+                  )
                   :
                   ListTile(
                         title: Text('Now Open - ${scheduleNow!.location_description}'),
@@ -174,7 +224,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
           ]
                 ,
               ),
-              const SizedBox(height: 10),
+
               const SectionTitle(
                 title: "Store Products",
                 page: ProductScreen(),

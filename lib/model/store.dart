@@ -12,9 +12,11 @@ class Store {
   final String longitude;
   final String latitude;
   final int user_id;
+  int subscription_count = 0;
+  int is_user_subscribed = 0;
   final List<Schedule> schedules;
 
-  const Store({
+  Store({
     required this.id,
     required this.store_name,
     required this.store_description,
@@ -23,6 +25,8 @@ class Store {
     required this.longitude,
     required this.latitude,
     required this.user_id,
+    required this.subscription_count,
+    required this.is_user_subscribed,
     required this.schedules
   });
 
@@ -44,6 +48,8 @@ class Store {
         longitude: json['longitude'],
         latitude: json['latitude'],
         user_id: json['user_id'],
+        subscription_count: json['subscription_count'],
+        is_user_subscribed: json['is_user_subscribed'],
         schedules: schedules
     );
   }
