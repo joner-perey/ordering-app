@@ -29,11 +29,14 @@ class Store {
   factory Store.fromJson(Map<String, dynamic> json) {
     List<Schedule> schedules = [];
 
-    List<dynamic> schedulesJson = json['schedules'];
+    if(json['schedules'] != null) {
+      List<dynamic> schedulesJson = json['schedules'];
 
-    for (var element in schedulesJson) {
-      schedules.add(Schedule.fromJson(element));
+      for (var element in schedulesJson) {
+        schedules.add(Schedule.fromJson(element));
+      }
     }
+
 
     return Store(
         id: json['id'],

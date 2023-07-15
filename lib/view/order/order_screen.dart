@@ -4,13 +4,13 @@ import 'package:get/get.dart';
 import 'package:lalaco/const.dart';
 import 'package:lalaco/controller/controllers.dart';
 import 'package:lalaco/view/order/order_details_screen.dart';
+import 'package:lalaco/view/review/review_screen.dart';
 
 class OrderScreen extends StatelessWidget {
   const OrderScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -34,7 +34,8 @@ class OrderScreen extends StatelessWidget {
                       child: Column(
                         children: List<Widget>.generate(
                           orderController.orderList.length,
-                              (index) {
+                          (index) {
+                            print(orderController.orderList.length);
                             final order = orderController.orderList[index];
                             final store = order.store.store_name;
                             final type = order.type;
@@ -42,7 +43,9 @@ class OrderScreen extends StatelessWidget {
                             final name = order.user.name;
                             final image = order.user.image;
                             double totalPrice = 0;
-                            for (int i = 0; i < order.orderDetails.length; i++) {
+                            for (int i = 0;
+                                i < order.orderDetails.length;
+                                i++) {
                               totalPrice += order.orderDetails[i].price *
                                   order.orderDetails[i].quantity;
                             }
@@ -51,12 +54,14 @@ class OrderScreen extends StatelessWidget {
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey.shade400),
+                                    border:
+                                        Border.all(color: Colors.grey.shade400),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   padding: const EdgeInsets.all(5),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Column(
                                         children: [
@@ -73,7 +78,8 @@ class OrderScreen extends StatelessWidget {
                                         child: Align(
                                           alignment: Alignment.centerLeft,
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 'Name: $name',
@@ -96,12 +102,80 @@ class OrderScreen extends StatelessWidget {
                                                 ),
                                               ),
                                               SizedBox(height: 5),
-                                              Text(
-                                                'Status: $status',
-                                                style: const TextStyle(
-                                                  fontSize: 16,
+
+                                              if (authController
+                                                      .user.value?.user_type ==
+                                                  'Vendor')
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      'Status: ',
+                                                      style: const TextStyle(
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                                    DropdownButton<String>(
+                                                      key: Key(
+                                                          order.id.toString()),
+                                                      value: status,
+                                                      items: <DropdownMenuItem<
+                                                          String>>[
+                                                        DropdownMenuItem<
+                                                            String>(
+                                                          value: 'Pending',
+                                                          child:
+                                                              Text('Pending'),
+                                                        ),
+                                                        DropdownMenuItem<
+                                                            String>(
+                                                          value: 'Preparing',
+                                                          child:
+                                                              Text('Preparing'),
+                                                        ),
+                                                        if (type == 'Delivery')
+                                                          DropdownMenuItem<
+                                                              String>(
+                                                            value:
+                                                                'On Delivery',
+                                                            child: Text(
+                                                                'On Delivery'),
+                                                          )
+                                                        else if (type ==
+                                                            'Pick-up')
+                                                          DropdownMenuItem<
+                                                              String>(
+                                                            value: 'For Pickup',
+                                                            child: Text(
+                                                                'For Pickup'),
+                                                          ),
+                                                        DropdownMenuItem<
+                                                            String>(
+                                                          value: 'Completed',
+                                                          child:
+                                                              Text('Completed'),
+                                                        ),
+                                                      ],
+                                                      onChanged:
+                                                          (String? newValue) {
+                                                        if (newValue != null) {
+                                                          orderController
+                                                              .updateOrderStatus(
+                                                                  id: order.id,
+                                                                  status:
+                                                                      newValue);
+                                                        }
+                                                      },
+                                                    ),
+                                                  ],
+                                                )
+                                              else
+                                                Text(
+                                                  'Status: $status',
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                  ),
                                                 ),
-                                              ),
+
                                               SizedBox(height: 5),
                                               Text(
                                                 'Total: Php$totalPrice',
@@ -110,23 +184,90 @@ class OrderScreen extends StatelessWidget {
                                                 ),
                                               ),
                                               SizedBox(height: 5),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            OrderDetailsScreen(order_id: order.id)),
-                                                  );
-                                                },
-                                                child: const Text(
-                                                  'View Products',
-                                                  style: TextStyle(
-                                                    decoration: TextDecoration.underline,
-                                                    color: Colors.blue,
+                                              Row(children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              OrderDetailsScreen(
+                                                                  order_id:
+                                                                      order
+                                                                          .id)),
+                                                    );
+                                                  },
+                                                  child: const Text(
+                                                    'View Products',
+                                                    style: TextStyle(
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                      color: Colors.blue,
+                                                    ),
                                                   ),
                                                 ),
-                                              )
+                                                SizedBox(width: 15),
+                                                Visibility(
+                                                  visible:
+                                                      status == 'Completed' &&
+                                                          authController
+                                                                  .user
+                                                                  .value
+                                                                  ?.user_type ==
+                                                              'Customer',
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ReviewScreen()
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: const Text(
+                                                      'Write a Review',
+                                                      style: TextStyle(
+                                                        decoration:
+                                                            TextDecoration
+                                                                .underline,
+                                                        color: Colors.blue,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ])
+
+                                              // Visibility(
+                                              //   visible:
+                                              //       status != 'Completed' &&
+                                              //           authController
+                                              //                   .user
+                                              //                   .value
+                                              //                   ?.user_type ==
+                                              //               'Vendor',
+                                              //   child: GestureDetector(
+                                              //     onTap: () {
+                                              //       Navigator.push(
+                                              //         context,
+                                              //         MaterialPageRoute(
+                                              //           builder: (context) =>
+                                              //               OrderDetailsScreen(
+                                              //                   order_id:
+                                              //                       order.id),
+                                              //         ),
+                                              //       );
+                                              //     },
+                                              //     child: const Text(
+                                              //       'Update Status',
+                                              //       style: TextStyle(
+                                              //         decoration: TextDecoration
+                                              //             .underline,
+                                              //         color: Colors.blue,
+                                              //       ),
+                                              //     ),
+                                              //   ),
+                                              // ),
                                             ],
                                           ),
                                         ),
@@ -134,7 +275,8 @@ class OrderScreen extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                if (index != cartItemsController.cartItemList.length - 1)
+                                if (index !=
+                                    orderController.orderList.length - 1)
                                   const SizedBox(height: 10),
                               ],
                             );
@@ -155,7 +297,13 @@ class OrderScreen extends StatelessWidget {
   Future<void> fetchOrderData() async {
     try {
       if (authController.user.value != null) {
-        await orderController.fetchOrderToCustomer(user_id: authController.user.value!.id);
+        if (authController.user.value?.user_type == 'Vendor') {
+          await orderController.fetchOrderToVendor(
+              store_id: authController.store.value!.id.toString());
+        } else {
+          await orderController.fetchOrderToCustomer(
+              user_id: authController.user.value!.id);
+        }
       }
     } catch (e) {
       print(e.toString());

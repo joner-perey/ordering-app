@@ -29,9 +29,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
   TextEditingController productPriceController = TextEditingController();
 
   Category? selectedCategory;
-  Store? selectedStore;
+  Store? store;
 
   XFile? pickedImage;
+
+  @override
+  void initState() {
+    fetchStoreData(); // Call the function when the screen initializes
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -127,17 +133,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     },
                   ),
                   const SizedBox(height: 10),
-                  InputDropdownButton(
-                    title: 'Store',
-                    items: storeController.storeList,
-                    value: selectedStore,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedStore = value;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 10),
+                  // InputDropdownButton(
+                  //   title: 'Store',
+                  //   items: storeController.storeList,
+                  //   value: selectedStore,
+                  //   onChanged: (value) {
+                  //     setState(() {
+                  //       selectedStore = value;
+                  //     });
+                  //   },
+                  // ),
+                  // const SizedBox(height: 10),
                   GestureDetector(
                     onTap: () {
                       _pickImage(ImageSource.gallery);
@@ -170,7 +176,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             description: productDescriptionController.text,
                             price: double.parse(productPriceController.text),
                             category_id: selectedCategory!.id,
-                            store_id: selectedStore!.id,
+                            store_id: store!.id,
                             image: _image);
                       }
                     },
@@ -190,5 +196,21 @@ class _AddProductScreenState extends State<AddProductScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> fetchStoreData() async {
+    try {
+      if (authController.user.value != null) {
+        var result = await storeController.getStoreByUserId(
+            user_id: int.parse(authController.user.value!.id));
+        setState(() {
+          store = result!;
+        });
+
+        print(store?.id);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

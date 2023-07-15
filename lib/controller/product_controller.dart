@@ -17,6 +17,8 @@ class ProductController extends GetxController {
 
   @override
   void onInit() {
+    productList.clear();
+    productPerStoreList.clear();
     getProducts();
     // getProductsPerStore(store_id: 1);
     super.onInit();
@@ -42,8 +44,6 @@ class ProductController extends GetxController {
       //call api
       var result = await RemoteProductService().getByName(keyword: keyword);
       if (result != null) {
-        //assign api result
-        // productList.clear();
         productList.assignAll(result);
       }
     } finally {
@@ -69,7 +69,6 @@ class ProductController extends GetxController {
       if (result != null) {
         productPerStoreList.assignAll(result);
       }
-
       return result;
     } finally {
       isProductLoading(false);
@@ -100,7 +99,6 @@ class ProductController extends GetxController {
       if (result.statusCode == 201 || result.statusCode == 200) {
         EasyLoading.showSuccess("Product Added!");
         Navigator.of(Get.overlayContext!).pop();
-        getProducts();
       } else {
         EasyLoading.showError('1!');
       }

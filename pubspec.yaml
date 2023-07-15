@@ -49,6 +49,8 @@ dependencies:
   google_maps_flutter: ^2.3.0
   geolocator: ^9.0.2
   image_picker: ^0.8.4+3
+  flutter_rating_bar: ^4.0.1
+  im_stepper: ^1.0.1+1
 
   #  local db
   hive: ^2.2.0

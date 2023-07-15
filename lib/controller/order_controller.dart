@@ -25,6 +25,23 @@ class OrderController extends GetxController {
       //call api
       var result =
           await RemoteOrderService().fetchCustomerOrders(user_id: user_id);
+      print(result);
+      if (result != null) {
+        //assign api result
+        orderList.assignAll(result);
+      }
+    } finally {
+      isOrderLoading(false);
+    }
+  }
+
+
+  Future<dynamic> fetchOrderToVendor({required String store_id}) async {
+    try {
+      isOrderLoading(true);
+      //call api
+      var result =
+      await RemoteOrderService().fetchVendorOrders(store_id: store_id);
       if (result != null) {
         //assign api result
         orderList.assignAll(result);
@@ -72,4 +89,31 @@ class OrderController extends GetxController {
       EasyLoading.dismiss();
     }
   }
+
+  Future<void> updateOrderStatus({
+    required int id,
+    required String status,
+  }) async {
+    try {
+      EasyLoading.show(status: 'Updating...', dismissOnTap: false);
+      var result = await RemoteOrderService().updateOrderStatus(
+        id: id,
+        status: status,
+      );
+      print(result.body);
+      if (result.statusCode == 200) {
+        // Profile updated successfully
+        EasyLoading.showSuccess('Order status updated successfully');
+      } else {
+        // Profile update failed
+        EasyLoading.showError('1 Order status update failed');
+      }
+    } catch (e) {
+      // Error occurred during profile update
+      EasyLoading.showError('2 Order status update failed');
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
 }
