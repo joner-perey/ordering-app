@@ -53,100 +53,66 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     fontWeight: FontWeight.w400),
               ),
             ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 1),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(8))),
-                    child: Row(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            if (_qty > 1) {
+            const SizedBox(height: 10),
+            Visibility(
+              visible: authController.user.value?.user_type == 'Customer',
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(width: 1),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8))),
+                      child: Row(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              if (_qty > 1) {
+                                setState(() {
+                                  _qty--;
+                                });
+                              }
+                            },
+                            child: Icon(
+                              Icons.keyboard_arrow_left_sharp,
+                              size: 32,
+                              color: Colors.grey.shade800,
+                            ),
+                          ),
+                          Text(
+                            formatter.format(_qty),
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey.shade800),
+                          ),
+                          InkWell(
+                            onTap: () {
                               setState(() {
-                                _qty--;
+                                _qty++;
                               });
-                            }
-                          },
-                          child: Icon(
-                            Icons.keyboard_arrow_left_sharp,
-                            size: 32,
-                            color: Colors.grey.shade800,
-                          ),
-                        ),
-                        Text(
-                          formatter.format(_qty),
-                          style: TextStyle(
-                              fontSize: 18, color: Colors.grey.shade800),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              _qty++;
-                            });
-                          },
-                          child: Icon(
-                            Icons.keyboard_arrow_right_sharp,
-                            size: 32,
-                            color: Colors.grey.shade800,
-                          ),
-                        )
-                      ],
+                            },
+                            child: Icon(
+                              Icons.keyboard_arrow_right_sharp,
+                              size: 32,
+                              color: Colors.grey.shade800,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 1),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(8))),
-                    // child: Row(
-                    //   children: [
-                    //     InkWell(
-                    //       onTap: () {
-                    //         if (_tagIndex > 0) {
-                    //           setState(() {
-                    //             _tagIndex--;
-                    //           });
-                    //         }
-                    //       },
-                    //       child: Icon(
-                    //         Icons.keyboard_arrow_left_sharp,
-                    //         size: 32,
-                    //         color: Colors.grey.shade800,
-                    //       ),
-                    //     ),
-                    //     Text(
-                    //       widget.product.tags[_tagIndex].title,
-                    //       style: TextStyle(
-                    //           fontSize: 18, color: Colors.grey.shade800),
-                    //     ),
-                    //     InkWell(
-                    //       onTap: () {
-                    //         if (_tagIndex != (widget.product.tags.length - 1)) {
-                    //           setState(() {
-                    //             _tagIndex++;
-                    //           });
-                    //         }
-                    //       },
-                    //       child: Icon(
-                    //         Icons.keyboard_arrow_right_sharp,
-                    //         size: 32,
-                    //         color: Colors.grey.shade800,
-                    //       ),
-                    //     )
-                    //   ],
-                    // ),
-                  )
-                ],
+                    const SizedBox(width: 10),
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(width: 1),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8))),
+                    )
+                  ],
+                ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
@@ -167,79 +133,83 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextButton(
-          style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            backgroundColor: MaterialStateProperty.all<Color>(
-                Theme.of(context).primaryColor),
-          ),
-          onPressed: () {
-            if (authController.user.value != null) {
-              int? lastStoreId = cartItemsController.cartItemList.isNotEmpty
-                  ? cartItemsController.cartItemList.last.store_id
-                  : null;
-              if (lastStoreId == widget.product.store_id ||
-                  lastStoreId == null) {
+      bottomNavigationBar: Visibility(
+        visible: authController.user.value?.user_type == 'Customer',
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextButton(
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              backgroundColor: MaterialStateProperty.all<Color>(
+                  Theme.of(context).primaryColor),
+            ),
+            onPressed: () {
+              if (authController.user.value != null) {
+                int? lastStoreId = cartItemsController.cartItemList.isNotEmpty
+                    ? cartItemsController.cartItemList.last.store_id
+                    : null;
+                if (lastStoreId == widget.product.store_id ||
+                    lastStoreId == null) {
                   cartItemsController.addToCart(
                       product_id: widget.product.id,
                       quantity: _qty,
                       user_id: int.parse(authController.user.value!.id),
                       store_id: widget.product.store_id);
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('Add to Cart'),
+                        content: const Text(
+                            'The product you want to add has different store than the current product/s in cart?'),
+                        actions: [
+                          TextButton(
+                            child: const Text(
+                              'Cancel',
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
+                            child: const Text(
+                              'Confirm',
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                            onPressed: () {
+                              cartItemsController.addToCart(
+                                  product_id: widget.product.id,
+                                  quantity: _qty,
+                                  user_id:
+                                      int.parse(authController.user.value!.id),
+                                  store_id: widget.product.store_id);
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
               } else {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: Text('Add to Cart'),
-                      content: const Text(
-                          'The product you want to add has different store than the current product/s in cart?'),
-                      actions: [
-                        TextButton(
-                          child: const Text(
-                            'Cancel',
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        TextButton(
-                          child: const Text(
-                            'Confirm',
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
-                          onPressed: () {
-                            cartItemsController.addToCart(
-                                product_id: widget.product.id,
-                                quantity: _qty,
-                                user_id: int.parse(authController.user.value!.id),
-                                store_id: widget.product.store_id);
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SignInScreen()));
               }
-            } else {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SignInScreen()));
-            }
-          },
-          child: const Padding(
-            padding: EdgeInsets.all(6.0),
-            child: Text(
-              'Add to Cart',
-              style: TextStyle(fontSize: 16),
+            },
+            child: const Padding(
+              padding: EdgeInsets.all(6.0),
+              child: Text(
+                'Add to Cart',
+                style: TextStyle(fontSize: 16),
+              ),
             ),
           ),
         ),

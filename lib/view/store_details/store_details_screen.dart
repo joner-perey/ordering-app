@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -26,17 +27,13 @@ class StoreDetailsScreen extends StatefulWidget {
 }
 
 class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
-
   final ExpansionTileController controller = ExpansionTileController();
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-
-      await productController.getProductsPerStore(store_id: 1);
-      setState(() {
-      });
-
+      await productController.getProductsPerStore(store_id: widget.store.id);
+      setState(() {});
     });
     super.initState();
   }
@@ -55,8 +52,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-    var scheduleNow =  widget.store.getScheduleNow();
+    var scheduleNow = widget.store.getScheduleNow();
 
     return Scaffold(
       appBar: AppBar(
@@ -75,7 +71,9 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                   widget.store.store_name,
                   style: TextStyle(
                     fontSize: 24,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme
+                        .of(context)
+                        .primaryColor,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -133,7 +131,9 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                   'About this store:',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme
+                        .of(context)
+                        .primaryColor,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -150,9 +150,17 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Row(
                   children: [
-                    const Icon(Icons.schedule, color: Colors.orangeAccent,),
+                    const Icon(
+                      Icons.schedule,
+                      color: Colors.orangeAccent,
+                    ),
                     const SizedBox(width: 8),
-                    scheduleNow == null ? const Text('Closed Now', style: TextStyle(color: Colors.red),) : Text(getStrScheduleNow())
+                    scheduleNow == null
+                        ? const Text(
+                      'Closed Now',
+                      style: TextStyle(color: Colors.red),
+                    )
+                        : Text(getStrScheduleNow())
                   ],
                 ),
               ),
@@ -164,22 +172,47 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.location_on, color: Colors.orangeAccent,),
+                        const Icon(
+                          Icons.location_on,
+                          color: Colors.orangeAccent,
+                        ),
                         const SizedBox(width: 8),
-                        scheduleNow == null ? const Text('Closed Now', style: TextStyle(color: Colors.red),) : Text(widget.store.getScheduleNow()!.location_description)
+                        scheduleNow == null
+                            ? const Text(
+                          'Closed Now',
+                          style: TextStyle(color: Colors.red),
+                        )
+                            : Text(widget.store
+                            .getScheduleNow()!
+                            .location_description)
                       ],
                     ),
                     Visibility(
                       visible: scheduleNow != null,
                       child: Row(
                         children: [
-                          TextButton(onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ViewLocationPage(location: LatLng(double.parse(scheduleNow!.latitude), double.parse(scheduleNow!.longitude)),)));
-                          }, child: const Text('View Location', style: TextStyle(color: Colors.orangeAccent),)),
-                          const Icon(Icons.chevron_right, color: Colors.orangeAccent,)
+                          TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ViewLocationPage(
+                                              location: LatLng(
+                                                  double.parse(
+                                                      scheduleNow!.latitude),
+                                                  double.parse(
+                                                      scheduleNow!.longitude)),
+                                            )));
+                              },
+                              child: const Text(
+                                'View Location',
+                                style: TextStyle(color: Colors.orangeAccent),
+                              )),
+                          const Icon(
+                            Icons.chevron_right,
+                            color: Colors.orangeAccent,
+                          )
                         ],
                       ),
                     )
@@ -191,38 +224,65 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                 controller: controller,
                 title: const Text('View Schedule'),
                 children: [
-                  widget.store.getScheduleNow() == null ?
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    child: Text('Closed Now'),
-                  )
-                  :
-                  ListTile(
-                        title: Text('Now Open - ${scheduleNow!.location_description}'),
-                    subtitle: Text(' ${scheduleNow.getStartTime().format(context)} - ${scheduleNow.getEndTime().format(context)}'),
-                    trailing: IconButton(onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ViewLocationPage(location: LatLng(double.parse(scheduleNow!.latitude), double.parse(scheduleNow!.longitude)),)));
-                    }, icon: const Icon(Icons.location_on, color: Colors.orangeAccent,)),
+                  widget.store.getScheduleNow() == null
+                      ? Text('Closed Now')
+                      : ListTile(
+                    title: Text(
+                        'Now Open - ${scheduleNow!.location_description}'),
+                    subtitle: Text(
+                        ' ${scheduleNow.getStartTime().format(
+                            context)} - ${scheduleNow.getEndTime().format(
+                            context)}'),
+                    trailing: IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ViewLocationPage(
+                                        location: LatLng(
+                                            double.parse(
+                                                scheduleNow!.latitude),
+                                            double.parse(
+                                                scheduleNow!.longitude)),
+                                      )));
+                        },
+                        icon: const Icon(
+                          Icons.location_on,
+                          color: Colors.orangeAccent,
+                        )),
                   ),
                   Divider(height: 1),
-                  ...List<Widget>.generate(widget.store.schedules.length, (index) {
-                    var schedule = widget.store.schedules[index];
-                    return ListTile(
-                      title: Text(schedule.location_description),
-                      subtitle: Text('${schedule.formatDays()} ${schedule.getStartTime().format(context)} - ${schedule.getEndTime().format(context)}'),
-                      trailing: IconButton(onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ViewLocationPage(location: LatLng(double.parse(schedule.latitude), double.parse(schedule.longitude)),)));
-                      }, icon: const Icon(Icons.location_on, color: Colors.orangeAccent,)),
-                    );
-                  })
-          ]
-                ,
+                  ...List<Widget>.generate(widget.store.schedules.length,
+                          (index) {
+                        var schedule = widget.store.schedules[index];
+                        return ListTile(
+                          title: Text(schedule.location_description),
+                          subtitle: Text(
+                              '${schedule.formatDays()} ${schedule
+                                  .getStartTime().format(context)} - ${schedule
+                                  .getEndTime().format(context)}'),
+                          trailing: IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ViewLocationPage(
+                                              location: LatLng(
+                                                  double.parse(
+                                                      schedule.latitude),
+                                                  double.parse(
+                                                      schedule.longitude)),
+                                            )));
+                              },
+                              icon: const Icon(
+                                Icons.location_on,
+                                color: Colors.orangeAccent,
+                              )),
+                        );
+                      })
+                ],
               ),
 
               const SectionTitle(
@@ -230,7 +290,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                 page: ProductScreen(),
               ),
               Obx(() {
-                if (homeController.popularProductList.isNotEmpty) {
+                if (productController.productPerStoreList.isNotEmpty) {
                   return PopularProduct(
                     popularProducts: productController.productPerStoreList,
                     // popularProducts: homeController.popularProductList,
@@ -239,6 +299,38 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                   return const PopularProductLoading();
                 }
               }),
+              const SectionTitle(
+                title: "Store Rating",
+                page: ProductScreen(),
+              ),
+          Container(
+            margin: EdgeInsets.only(left: 16, right: 16),
+              child: Row(
+                children: [
+                  RatingBarIndicator(
+                    rating: 3,
+                    direction: Axis.horizontal,
+                    itemCount: 5,
+                    itemSize: 35,
+                    itemBuilder: (context, index) =>
+                        Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                  ),
+                  SizedBox(width: 8), // Adjust the width as needed
+                  Text(
+                    '3.0', // Replace with your rating value
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+          ),
+
+
               const SizedBox(height: 80),
             ],
           ),

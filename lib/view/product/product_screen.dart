@@ -23,7 +23,11 @@ class ProductScreen extends StatelessWidget {
                   if (productController.isProductLoading.value) {
                     return const ProductLoadingGrid();
                   } else {
-                    if (productController.productList.isNotEmpty) {
+                    if (productController.productPerStoreList.isNotEmpty) {
+                      return ProductGrid(
+                          products: productController.productPerStoreList);
+                    } else
+                      if (productController.productList.isNotEmpty) {
                       return ProductGrid(
                           products: productController.productList);
                     } else {

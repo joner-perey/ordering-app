@@ -18,14 +18,10 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreen extends State<DashboardScreen> {
-  late Store store;
+  Store? store;
 
   @override
   void initState() {
-    if (authController.user.value != null &&
-        authController.user.value?.user_type == 'Vendor') {
-      fetchStoreData();
-    }
     super.initState();
   }
 
@@ -38,7 +34,9 @@ class _DashboardScreen extends State<DashboardScreen> {
             index: controller.tabIndex,
             children: [
               HomeScreen(),
-              ProductScreen(),
+              store == null
+                  ? ProductScreen()
+                  : StoreDetailsScreen(store: store!),
               MapSample(),
               AccountScreen(),
             ],
@@ -63,12 +61,23 @@ class _DashboardScreen extends State<DashboardScreen> {
             onTap: (val) {
               controller.updateIndex(val);
               productController.getProducts();
+
               storeController.getStores(userId: authController.localAuthService.getUserId()!.toString());
+
+              if (authController.user.value != null &&
+                  authController.user.value?.user_type == 'Vendor') {
+                fetchStoreData();
+              } else {
+                store = null;
+              }
             },
-            items: const [
+            items: [
               BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.category), label: 'Products'),
+              store == null
+                  ? BottomNavigationBarItem(
+                      icon: Icon(Icons.category), label: 'Products')
+                  : BottomNavigationBarItem(
+                      icon: Icon(Icons.store), label: 'My Store'),
               BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
               BottomNavigationBarItem(
                   icon: Icon(Icons.account_circle), label: 'Account'),
@@ -84,10 +93,10 @@ class _DashboardScreen extends State<DashboardScreen> {
       if (authController.user.value != null) {
         var result = await storeController.getStoreByUserId(
             user_id: int.parse(authController.user.value!.id));
+        print(store?.id);
         setState(() {
           store = result!;
         });
-        print(store.id);
       }
     } catch (e) {
       print(e.toString());

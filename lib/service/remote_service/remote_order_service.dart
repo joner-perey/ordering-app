@@ -8,18 +8,46 @@ class RemoteOrderService {
   var remoteUrl = '$baseUrl/api/orders';
 
   Future<dynamic> fetchCustomerOrders({required String user_id}) async {
-    var response = await http.get(Uri.parse('$remoteUrl/customer/?user_id=$user_id'));
+    var response =
+        await http.get(Uri.parse('$remoteUrl/customer/?user_id=$user_id'));
     final parsedJson = jsonDecode(response.body);
     final results = parsedJson['orders'];
 
     List<Order> orders = [];
     if (response.statusCode == 200) {
       for (final result in results) {
-        orders.add(Order.fromJson(result));
+        try {
+          orders.add(Order.fromJson(result));
+        } catch (e) {
+          print(e.toString());
+        }
       }
     } else {
       throw Exception('Failed to load Orders');
     }
+
+    return orders;
+  }
+
+  Future<dynamic> fetchVendorOrders({required String store_id}) async {
+    var response =
+        await http.get(Uri.parse('$remoteUrl/vendor/?store_id=$store_id'));
+    final parsedJson = jsonDecode(response.body);
+    final results = parsedJson['orders'];
+
+    List<Order> orders = [];
+    if (response.statusCode == 200) {
+      for (final result in results) {
+        try {
+          orders.add(Order.fromJson(result));
+        } catch (e) {
+          print(e.toString());
+        }
+      }
+    } else {
+      throw Exception('Failed to load Orders');
+    }
+
     return orders;
   }
 
@@ -48,6 +76,21 @@ class RemoteOrderService {
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(body),
     );
+    return response;
+  }
+
+  Future<dynamic> updateOrderStatus({
+    required int id,
+    required String status,
+  }) async {
+    var url = Uri.parse('$baseUrl/api/orders/$id');
+    var response = await http.put(
+      url,
+      body: {
+        'status': status,
+      },
+    );
+    var responseBody = response.body;
     return response;
   }
 }
