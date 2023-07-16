@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:lalaco/const.dart';
 import 'package:lalaco/controller/controllers.dart';
 import 'package:lalaco/view/order/order_details_screen.dart';
-import 'package:lalaco/view/review/review_screen.dart';
+import 'package:lalaco/view/review/rating_screen.dart';
 
 class OrderScreen extends StatelessWidget {
   const OrderScreen({Key? key}) : super(key: key);
@@ -220,9 +220,14 @@ class OrderScreen extends StatelessWidget {
                                                       Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              ReviewScreen()
-                                                        ),
+                                                            builder: (context) =>
+                                                                RatingScreen(
+                                                                  store_id:
+                                                                      order
+                                                                          .store
+                                                                          .id,
+                                                                  order_id: order.id,
+                                                                )),
                                                       );
                                                     },
                                                     child: const Text(
