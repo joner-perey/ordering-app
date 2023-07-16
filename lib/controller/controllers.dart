@@ -6,6 +6,7 @@ import 'package:lalaco/controller/notification_controller.dart';
 import 'package:lalaco/controller/order_controller.dart';
 import 'package:lalaco/controller/order_detail_controller.dart';
 import 'package:lalaco/controller/product_controller.dart';
+import 'package:lalaco/controller/rating_controller,dart.dart';
 import 'package:lalaco/controller/schedule_controller.dart';
 import 'package:lalaco/controller/store_controller.dart';
 import 'package:lalaco/controller/subscription_controller.dart';
@@ -25,6 +26,8 @@ ScheduleController scheduleController = ScheduleController.instance;
 OrderDetailController orderDetailController = OrderDetailController.instance;
 NotificationController notificationController = NotificationController.instance;
 SubscriptionController subscriptionController = SubscriptionController.instance;
+
+RatingController ratingController = RatingController.instance;
 
 
 
