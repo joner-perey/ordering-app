@@ -12,6 +12,7 @@ import 'package:lalaco/view/home/components/popular_product/popular_product_load
 import 'package:lalaco/view/home/components/section_title.dart';
 import 'package:lalaco/view/product/product_screen.dart';
 import 'package:lalaco/view/product_details/compnents/product_carousel_slider.dart';
+import 'package:lalaco/view/review/rating_screen.dart';
 import 'package:lalaco/view/store_details/components/store_carousel_slider.dart';
 import 'package:lalaco/view/subscription/subscription_screen.dart';
 
@@ -88,42 +89,53 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SubscriptionScreen(storeId: widget.store.id)));
+                                  builder: (context) =>
+                                      SubscriptionScreen(
+                                          storeId: widget.store.id)));
                         },
                         style: TextButton.styleFrom(
-                          foregroundColor: Colors.black54
-                        ),
-                        child: Text('${widget.store.subscription_count} Subscribers')),
-                    SizedBox(width: 8,),
-                    Visibility(
-                      visible: authController.user.value!.user_type == 'Customer',
-                      child: ElevatedButton(onPressed: () {
+                            foregroundColor: Colors.black54),
+                        child: Text(
+                            '${widget.store.subscription_count} Subscribers')),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
                         if (widget.store.is_user_subscribed == 1) {
-                          subscriptionController.deleteSubscription(user_id: authController.user.value!.id, store_id: widget.store.id.toString()).then((value) {
-
+                          subscriptionController
+                              .deleteSubscription(
+                              user_id: authController.user.value!.id,
+                              store_id: widget.store.id.toString())
+                              .then((value) {
                             setState(() {
                               widget.store.is_user_subscribed = 0;
                               widget.store.subscription_count -= 1;
                             });
                           });
                         } else {
-                          subscriptionController.addSubscription(user_id: authController.user.value!.id, store_id: widget.store.id.toString()).then((value) {
-
+                          subscriptionController
+                              .addSubscription(
+                              user_id: authController.user.value!.id,
+                              store_id: widget.store.id.toString())
+                              .then((value) {
                             setState(() {
                               widget.store.is_user_subscribed = 1;
                               widget.store.subscription_count += 1;
                             });
                           });
                         }
-
-
                       },
-                        child: Text(widget.store.is_user_subscribed == 1 ? 'Subscribed' : 'Subscribe'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: widget.store.is_user_subscribed != 1 ? Colors.deepPurpleAccent : Colors.white,
-                          foregroundColor: widget.store.is_user_subscribed != 1 ? Colors.white : Colors.black54
-                        ),
-                      ),
+                      child: Text(widget.store.is_user_subscribed == 1
+                          ? 'Subscribed'
+                          : 'Subscribe'),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: widget.store.is_user_subscribed != 1
+                              ? Colors.deepPurpleAccent
+                              : Colors.white,
+                          foregroundColor: widget.store.is_user_subscribed != 1
+                              ? Colors.white
+                              : Colors.black54),
                     )
                   ],
                 ),
@@ -287,7 +299,6 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                       })
                 ],
               ),
-
               const SectionTitle(
                 title: "Store Products",
                 page: ProductScreen(),
@@ -302,38 +313,64 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                   return const PopularProductLoading();
                 }
               }),
-              const SectionTitle(
+              SectionTitle(
                 title: "Store Rating",
-                page: ProductScreen(),
+                page: RatingScreen(
+                    store_id: widget.store.id, order_id: 0, has_rating: true),
               ),
-          Container(
-            margin: EdgeInsets.only(left: 16, right: 16),
-              child: Row(
-                children: [
-                  RatingBarIndicator(
-                    rating: 3,
-                    direction: Axis.horizontal,
-                    itemCount: 5,
-                    itemSize: 35,
-                    itemBuilder: (context, index) =>
-                        Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                        ),
-                  ),
-                  SizedBox(width: 8), // Adjust the width as needed
-                  Text(
-                    '3.0', // Replace with your rating value
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+              Container(
+                margin: EdgeInsets.only(left: 16, right: 16),
+                child: Row(
+                  children: [
+                    FutureBuilder<double>(
+                      future: ratingController.getAverageRatingByStoreId(
+                          store_id: widget.store.id),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final rating = snapshot.data!;
+                          return RatingBarIndicator(
+                            rating: rating,
+                            direction: Axis.horizontal,
+                            itemCount: 5,
+                            itemSize: 35,
+                            itemBuilder: (context, index) =>
+                                Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                ),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+                        // Display a loading indicator while waiting for the future to complete
+                        return CircularProgressIndicator();
+                      },
                     ),
-                  ),
-                ],
+
+                    SizedBox(width: 8), // Adjust the width as needed
+                    FutureBuilder<double>(
+                      future: ratingController.getAverageRatingByStoreId(
+                          store_id: widget.store.id),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final averageRating = snapshot.data!;
+                          return Text(
+                            averageRating.toString(),
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+                        // Display a loading indicator while waiting for the future to complete
+                        return CircularProgressIndicator();
+                      },
+                    )
+                  ],
+                ),
               ),
-          ),
-
-
               const SizedBox(height: 80),
             ],
           ),

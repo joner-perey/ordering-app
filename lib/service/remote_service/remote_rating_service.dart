@@ -32,6 +32,32 @@ class RemoteRatingService {
     return ratings;
   }
 
+  Future<double> getAverageRatingByStoreId({required int store_id}) async {
+    var response =
+        await client.get(Uri.parse('$remoteUrl/?store_id=$store_id'));
+    print(response.body);
+    final parsedJson = jsonDecode(response.body);
+    final results = parsedJson['ratings'];
+
+    List<Rating> ratings = [];
+
+    if (response.statusCode == 200) {
+      for (final result in results) {
+        ratings.add(Rating.fromJson(result));
+      }
+
+      // Calculate the average rating
+      double totalRating = 0;
+      for (final rating in ratings) {
+        totalRating += rating.rate;
+      }
+      double averageRating = totalRating / ratings.length;
+      return averageRating;
+    } else {
+      throw Exception('Failed to load Ratings');
+    }
+  }
+
   Future<dynamic> addRating({
     required int store_id,
     required int user_id,

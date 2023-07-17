@@ -16,6 +16,7 @@ class Order {
   final List<OrderDetail> orderDetails;
   final Store store;
   final User user;
+  final bool has_rating;
 
   const Order({
     required this.id,
@@ -30,6 +31,7 @@ class Order {
     required this.orderDetails,
     required this.store,
     required this.user,
+    required this.has_rating,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -56,6 +58,7 @@ class Order {
       orderDetails: finalProducts,
       store: Store.fromJson(json['store']),
       user: User.fromJson(json['user']),
+      has_rating: json['has_rating'],
     );
   }
 }

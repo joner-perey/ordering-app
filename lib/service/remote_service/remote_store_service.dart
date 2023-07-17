@@ -9,8 +9,9 @@ class RemoteStoreService {
   var client = http.Client();
   var remoteUrl = '$baseUrl/api/stores';
 
-  Future<dynamic> fetchStores({ required String userId }) async {
-    var response = await http.get(Uri.parse('$remoteUrl?user_id=$userId'), headers: {
+  Future<dynamic> fetchStores({required String userId}) async {
+    var response =
+        await http.get(Uri.parse('$remoteUrl?user_id=$userId'), headers: {
       "Content-Type": "application/json",
     });
 
@@ -64,13 +65,14 @@ class RemoteStoreService {
     return stores;
   }
 
-  Future<dynamic> updateStore({required int id,
-    required String store_name,
-    required File? image,
-    required String store_description,
-    required String location_description,
-    required String longitude,
-    required String latitude}) async {
+  Future<dynamic> updateStore(
+      {required int id,
+      required String store_name,
+      required File? image,
+      required String store_description,
+      required String location_description,
+      required String longitude,
+      required String latitude}) async {
     var request = http.MultipartRequest(
       'POST',
       Uri.parse('$baseUrl/api/stores/$id'),
@@ -87,9 +89,7 @@ class RemoteStoreService {
       var multipartFile = http.MultipartFile.fromBytes(
         'image',
         imageStream,
-        filename: image.path
-            .split('/')
-            .last,
+        filename: image.path.split('/').last,
       );
       request.files.add(multipartFile);
     }

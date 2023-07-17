@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:lalaco/controller/controllers.dart';
 import 'package:lalaco/model/product.dart';
 import 'package:lalaco/model/rating.dart';
 import 'package:lalaco/service/remote_service/remote_product_service.dart';
@@ -28,6 +29,17 @@ class RatingController extends GetxController {
       if (result != null) {
         ratingPerStoreList.assignAll(result);
       }
+      return result;
+    } finally {
+      isRatingLoading(false);
+    }
+  }
+
+  Future<double> getAverageRatingByStoreId({required int store_id}) async {
+    try {
+      isRatingLoading(true);
+      double result = await RemoteRatingService()
+          .getAverageRatingByStoreId(store_id: store_id);
       return result;
     } finally {
       isRatingLoading(false);

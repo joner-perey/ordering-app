@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:lalaco/controller/auth_controller.dart';
+import 'package:lalaco/controller/controllers.dart';
 import 'package:lalaco/model/product.dart';
 import 'package:lalaco/service/remote_service/remote_product_service.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -17,8 +19,9 @@ class ProductController extends GetxController {
 
   @override
   void onInit() {
-    productList.clear();
-    productPerStoreList.clear();
+    authController.onInit();
+    // productList.clear();
+    // productPerStoreList.clear();
     getProducts();
     // getProductsPerStore(store_id: 1);
     super.onInit();
@@ -65,7 +68,8 @@ class ProductController extends GetxController {
   Future<dynamic> getProductsPerStore({required int store_id}) async {
     try {
       isProductLoading(true);
-      var result = await RemoteProductService().getProductsPerStore(store_id: store_id);
+      var result =
+          await RemoteProductService().getProductsPerStore(store_id: store_id);
       if (result != null) {
         productPerStoreList.assignAll(result);
       }
@@ -74,7 +78,6 @@ class ProductController extends GetxController {
       isProductLoading(false);
     }
   }
-
 
   void addProduct({
     required String name,
@@ -102,9 +105,70 @@ class ProductController extends GetxController {
       } else {
         EasyLoading.showError('1!');
       }
-    }
-    catch (e) {
+    } catch (e) {
       EasyLoading.showError('2!');
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  Future<void> updateProduct({
+    required int id,
+    required String name,
+    required String description,
+    required double price,
+    required int category_id,
+    required File? image,
+  }) async {
+    try {
+      EasyLoading.show(status: 'Updating...', dismissOnTap: false);
+      print('asd');
+      var result = await RemoteProductService().updateProduct(
+        id: id,
+        name: name,
+        description: description,
+        price: price,
+        category_id: category_id,
+        image: image,
+      );
+      if (result.statusCode == 200) {
+        // Profile updated successfully
+        EasyLoading.showSuccess('Product updated successfully');
+        getProducts();
+        getProductsPerStore(store_id: authController.store.value!.id);
+        // Optionally, you can update the user object with the updated profile data
+        // user.value?.name = name;
+        // user.value?.email = email;
+        // user.value?.phone_number = phone_number;
+      } else {
+        // Profile update failed
+        EasyLoading.showError('1Product update failed');
+      }
+    } catch (e) {
+      // Error occurred during profile update
+      EasyLoading.showError('2Product update failed');
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  void deleteProduct(int product_id) async {
+    try {
+      EasyLoading.show(
+        status: 'Loading...',
+        dismissOnTap: false,
+      );
+      var result = await RemoteProductService().deleteProduct(product_id);
+      print(result.statusCode);
+      if (result.statusCode == 200) {
+        EasyLoading.showSuccess("Item Deleted Successfully!");
+        getProducts();
+      } else {
+        EasyLoading.showError('Something went wrong. Try again!');
+      }
+    } catch (e) {
+      // print(e);
+      EasyLoading.showError('Something went wrong. Try again!');
     } finally {
       EasyLoading.dismiss();
     }

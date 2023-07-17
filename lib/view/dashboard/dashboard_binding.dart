@@ -17,10 +17,10 @@ import 'package:lalaco/controller/subscription_controller.dart';
 class DashboardBinding extends Bindings {
   @override
   void dependencies() {
+    Get.put(AuthController());
     Get.put(DashboardController());
     Get.put(HomeController());
     Get.put(ProductController());
-    Get.put(AuthController());
     Get.put(CategoryController());
     Get.put(StoreController());
     Get.put(CartItemsController());

@@ -1,3 +1,5 @@
+import 'package:lalaco/model/category.dart';
+
 class Product {
   final int id;
   final String name;
@@ -7,6 +9,7 @@ class Product {
 
   final int category_id;
   final int store_id;
+  final Category category;
 
   const Product({
     required this.id,
@@ -16,17 +19,18 @@ class Product {
     required this.price,
     required this.category_id,
     required this.store_id,
+    required this.category,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      id: json['id'],
-      name: json['name'],
-      image: json['image'],
-      description: json['description'],
-      price: double.parse(json['price']),
-      category_id: json['category_id'],
-      store_id: json['store_id'],
-    );
+        id: json['id'],
+        name: json['name'],
+        image: json['image'],
+        description: json['description'],
+        price: double.parse(json['price']),
+        category_id: json['category_id'],
+        store_id: json['store_id'],
+        category: Category.fromJson(json['category']));
   }
 }
