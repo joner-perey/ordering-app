@@ -4,11 +4,14 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:lalaco/controller/controllers.dart';
 import 'package:lalaco/model/store.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:ui' as ui;
+import 'package:lalaco/const.dart';
+import 'package:lalaco/view/store_details/store_details_screen.dart';
 
 class MapSample extends StatefulWidget {
   const MapSample({super.key});
@@ -90,8 +93,8 @@ class MapSampleState extends State<MapSample> {
 
   @override
   void initState() {
-    handleFetchStores();
-    addCustomIcon();
+    // handleFetchStores();
+
     _goToTheLake();
     super.initState();
   }
@@ -126,12 +129,50 @@ class MapSampleState extends State<MapSample> {
     });
   }
 
+  void handleDisplayMarkers() async {
+    if (authController.user.value!.user_type == 'Vendor') {
+      handleFetchSubscriptions();
+    } else if (authController.user.value!.user_type == 'Customer') {
+      handleFetchStores();
+    }
+
+  }
+  
+  void handleFetchSubscriptions() async {
+    await subscriptionController.fetchSubscriptions(storeId: authController.store.value!.id);
+
+    markers.clear();
+
+    print('count ${subscriptionController.subscriptionList.length}');
+
+    for (var subscription in subscriptionController.subscriptionList) {
+      markers.add(Marker(
+        markerId: MarkerId(subscription.id.toString()),
+        infoWindow: InfoWindow(
+            title: subscription.user.name,
+            onTap: () {
+              // debugPrint(store.store_name);
+            }),
+        icon: BitmapDescriptor.defaultMarker,
+        position:
+        LatLng(double.parse(subscription.user.latitude!), double.parse(subscription.user.longitude!)),
+      ));
+    }
+
+    setState(() {
+
+    });
+  }
+
   void handleFetchStores() async {
     List<Store> stores = await fetchStores();
 
+    markers.clear();
+
     for (var store in stores) {
-      final bitmapIcon = await BitmapDescriptor.fromAssetImage(
-          const ImageConfiguration(size: Size(48, 48)), 'assets/shop1.png');
+      if (store.latitude == '') {
+        continue;
+      }
       markers.add(Marker(
         markerId: MarkerId(store.store_name),
         infoWindow: InfoWindow(
@@ -139,17 +180,27 @@ class MapSampleState extends State<MapSample> {
             snippet: store.store_description,
             onTap: () {
               debugPrint(store.store_name);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => StoreDetailsScreen(store: store)));
             }),
         icon: markerIcon,
         position:
             LatLng(double.parse(store.latitude), double.parse(store.longitude)),
       ));
     }
+
+    addCustomIcon();
+
+    setState(() {
+
+    });
   }
 
   Future<List<Store>> fetchStores() async {
     var response =
-        await http.get(Uri.parse('http://192.168.1.2:8000/api/stores'));
+        await http.get(Uri.parse('$baseUrl/api/stores'));
     final parsedJson = jsonDecode(response.body);
     final results = parsedJson['stores'];
 

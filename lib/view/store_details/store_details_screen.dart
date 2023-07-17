@@ -56,7 +56,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Stores'),
+        title: const Text('Store'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -95,31 +95,34 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                         ),
                         child: Text('${widget.store.subscription_count} Subscribers')),
                     SizedBox(width: 8,),
-                    ElevatedButton(onPressed: () {
-                      if (widget.store.is_user_subscribed == 1) {
-                        subscriptionController.deleteSubscription(user_id: authController.user.value!.id, store_id: widget.store.id.toString()).then((value) {
+                    Visibility(
+                      visible: authController.user.value!.user_type == 'Customer',
+                      child: ElevatedButton(onPressed: () {
+                        if (widget.store.is_user_subscribed == 1) {
+                          subscriptionController.deleteSubscription(user_id: authController.user.value!.id, store_id: widget.store.id.toString()).then((value) {
 
-                          setState(() {
-                            widget.store.is_user_subscribed = 0;
-                            widget.store.subscription_count -= 1;
+                            setState(() {
+                              widget.store.is_user_subscribed = 0;
+                              widget.store.subscription_count -= 1;
+                            });
                           });
-                        });
-                      } else {
-                        subscriptionController.addSubscription(user_id: authController.user.value!.id, store_id: widget.store.id.toString()).then((value) {
+                        } else {
+                          subscriptionController.addSubscription(user_id: authController.user.value!.id, store_id: widget.store.id.toString()).then((value) {
 
-                          setState(() {
-                            widget.store.is_user_subscribed = 1;
-                            widget.store.subscription_count += 1;
+                            setState(() {
+                              widget.store.is_user_subscribed = 1;
+                              widget.store.subscription_count += 1;
+                            });
                           });
-                        });
-                      }
+                        }
 
 
-                    },
-                      child: Text(widget.store.is_user_subscribed == 1 ? 'Subscribed' : 'Subscribe'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: widget.store.is_user_subscribed != 1 ? Colors.deepPurpleAccent : Colors.white,
-                        foregroundColor: widget.store.is_user_subscribed != 1 ? Colors.white : Colors.black54
+                      },
+                        child: Text(widget.store.is_user_subscribed == 1 ? 'Subscribed' : 'Subscribe'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: widget.store.is_user_subscribed != 1 ? Colors.deepPurpleAccent : Colors.white,
+                          foregroundColor: widget.store.is_user_subscribed != 1 ? Colors.white : Colors.black54
+                        ),
                       ),
                     )
                   ],

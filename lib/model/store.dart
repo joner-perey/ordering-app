@@ -51,8 +51,8 @@ class Store {
         longitude: json['longitude'],
         latitude: json['latitude'],
         user_id: json['user_id'],
-        subscription_count: json['subscription_count'],
-        is_user_subscribed: json['is_user_subscribed'],
+        subscription_count: json['subscription_count'] ?? 0,
+        is_user_subscribed: json['is_user_subscribed'] ?? 0,
         schedules: schedules
     );
   }

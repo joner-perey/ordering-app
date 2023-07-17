@@ -13,6 +13,8 @@ class RemoteSubscriptionService {
     final parsedJson = jsonDecode(response.body);
     final results = parsedJson['subscriptions'];
 
+    print(response.body);
+
     List<Subscription> subscriptions = [];
     if (response.statusCode == 200) {
       for (final result in results) {
