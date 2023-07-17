@@ -48,8 +48,8 @@ class HomeController extends GetxController {
   void getPopularStores() async {
     try {
       isPopularStoreLoading(true);
-
-      var result = await RemoteStoreService().fetchStores(userId: localAuthService.getUserId()!.toString());
+      String userId = localAuthService.getUserId() == null ? '0' : localAuthService.getUserId()!.toString();
+      var result = await RemoteStoreService().fetchStores(userId: userId);
       if (result != null) {
         popularStoreList.assignAll(result);
       }

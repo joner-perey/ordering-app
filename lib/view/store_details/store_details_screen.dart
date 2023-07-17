@@ -72,7 +72,9 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                   widget.store.store_name,
                   style: TextStyle(
                     fontSize: 24,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme
+                        .of(context)
+                        .primaryColor,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -87,8 +89,9 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SubscriptionScreen(
-                                      storeId: widget.store.id)));
+                                  builder: (context) =>
+                                      SubscriptionScreen(
+                                          storeId: widget.store.id)));
                         },
                         style: TextButton.styleFrom(
                             foregroundColor: Colors.black54),
@@ -102,8 +105,8 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                         if (widget.store.is_user_subscribed == 1) {
                           subscriptionController
                               .deleteSubscription(
-                                  user_id: authController.user.value!.id,
-                                  store_id: widget.store.id.toString())
+                              user_id: authController.user.value!.id,
+                              store_id: widget.store.id.toString())
                               .then((value) {
                             setState(() {
                               widget.store.is_user_subscribed = 0;
@@ -113,8 +116,8 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                         } else {
                           subscriptionController
                               .addSubscription(
-                                  user_id: authController.user.value!.id,
-                                  store_id: widget.store.id.toString())
+                              user_id: authController.user.value!.id,
+                              store_id: widget.store.id.toString())
                               .then((value) {
                             setState(() {
                               widget.store.is_user_subscribed = 1;
@@ -143,7 +146,9 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                   'About this store:',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme
+                        .of(context)
+                        .primaryColor,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -167,9 +172,9 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                     const SizedBox(width: 8),
                     scheduleNow == null
                         ? const Text(
-                            'Closed Now',
-                            style: TextStyle(color: Colors.red),
-                          )
+                      'Closed Now',
+                      style: TextStyle(color: Colors.red),
+                    )
                         : Text(getStrScheduleNow())
                   ],
                 ),
@@ -189,12 +194,12 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                         const SizedBox(width: 8),
                         scheduleNow == null
                             ? const Text(
-                                'Closed Now',
-                                style: TextStyle(color: Colors.red),
-                              )
+                          'Closed Now',
+                          style: TextStyle(color: Colors.red),
+                        )
                             : Text(widget.store
-                                .getScheduleNow()!
-                                .location_description)
+                            .getScheduleNow()!
+                            .location_description)
                       ],
                     ),
                     Visibility(
@@ -206,7 +211,8 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => ViewLocationPage(
+                                        builder: (context) =>
+                                            ViewLocationPage(
                                               location: LatLng(
                                                   double.parse(
                                                       scheduleNow!.latitude),
@@ -236,53 +242,61 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                   widget.store.getScheduleNow() == null
                       ? Text('Closed Now')
                       : ListTile(
-                          title: Text(
-                              'Now Open - ${scheduleNow!.location_description}'),
+                    title: Text(
+                        'Now Open - ${scheduleNow!.location_description}'),
+                    subtitle: Text(
+                        ' ${scheduleNow.getStartTime().format(
+                            context)} - ${scheduleNow.getEndTime().format(
+                            context)}'),
+                    trailing: IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ViewLocationPage(
+                                        location: LatLng(
+                                            double.parse(
+                                                scheduleNow!.latitude),
+                                            double.parse(
+                                                scheduleNow!.longitude)),
+                                      )));
+                        },
+                        icon: const Icon(
+                          Icons.location_on,
+                          color: Colors.orangeAccent,
+                        )),
+                  ),
+                  Divider(height: 1),
+                  ...List<Widget>.generate(widget.store.schedules.length,
+                          (index) {
+                        var schedule = widget.store.schedules[index];
+                        return ListTile(
+                          title: Text(schedule.location_description),
                           subtitle: Text(
-                              ' ${scheduleNow.getStartTime().format(context)} - ${scheduleNow.getEndTime().format(context)}'),
+                              '${schedule.formatDays()} ${schedule
+                                  .getStartTime().format(context)} - ${schedule
+                                  .getEndTime().format(context)}'),
                           trailing: IconButton(
                               onPressed: () {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => ViewLocationPage(
+                                        builder: (context) =>
+                                            ViewLocationPage(
                                               location: LatLng(
                                                   double.parse(
-                                                      scheduleNow!.latitude),
+                                                      schedule.latitude),
                                                   double.parse(
-                                                      scheduleNow!.longitude)),
+                                                      schedule.longitude)),
                                             )));
                               },
                               icon: const Icon(
                                 Icons.location_on,
                                 color: Colors.orangeAccent,
                               )),
-                        ),
-                  Divider(height: 1),
-                  ...List<Widget>.generate(widget.store.schedules.length,
-                      (index) {
-                    var schedule = widget.store.schedules[index];
-                    return ListTile(
-                      title: Text(schedule.location_description),
-                      subtitle: Text(
-                          '${schedule.formatDays()} ${schedule.getStartTime().format(context)} - ${schedule.getEndTime().format(context)}'),
-                      trailing: IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ViewLocationPage(
-                                          location: LatLng(
-                                              double.parse(schedule.latitude),
-                                              double.parse(schedule.longitude)),
-                                        )));
-                          },
-                          icon: const Icon(
-                            Icons.location_on,
-                            color: Colors.orangeAccent,
-                          )),
-                    );
-                  })
+                        );
+                      })
                 ],
               ),
               const SectionTitle(
@@ -308,24 +322,52 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                 margin: EdgeInsets.only(left: 16, right: 16),
                 child: Row(
                   children: [
-                    RatingBarIndicator(
-                      rating: 3,
-                      direction: Axis.horizontal,
-                      itemCount: 5,
-                      itemSize: 35,
-                      itemBuilder: (context, index) => Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                      ),
+                    FutureBuilder<double>(
+                      future: ratingController.getAverageRatingByStoreId(
+                          store_id: widget.store.id),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final rating = snapshot.data!;
+                          return RatingBarIndicator(
+                            rating: rating,
+                            direction: Axis.horizontal,
+                            itemCount: 5,
+                            itemSize: 35,
+                            itemBuilder: (context, index) =>
+                                Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                ),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+                        // Display a loading indicator while waiting for the future to complete
+                        return CircularProgressIndicator();
+                      },
                     ),
+
                     SizedBox(width: 8), // Adjust the width as needed
-                    Text(
-                      '3.0', // Replace with your rating value
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    FutureBuilder<double>(
+                      future: ratingController.getAverageRatingByStoreId(
+                          store_id: widget.store.id),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final averageRating = snapshot.data!;
+                          return Text(
+                            averageRating.toString(),
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+                        // Display a loading indicator while waiting for the future to complete
+                        return CircularProgressIndicator();
+                      },
+                    )
                   ],
                 ),
               ),

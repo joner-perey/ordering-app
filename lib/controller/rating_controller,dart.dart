@@ -35,6 +35,17 @@ class RatingController extends GetxController {
     }
   }
 
+  Future<double> getAverageRatingByStoreId({required int store_id}) async {
+    try {
+      isRatingLoading(true);
+      double result = await RemoteRatingService()
+          .getAverageRatingByStoreId(store_id: store_id);
+      return result;
+    } finally {
+      isRatingLoading(false);
+    }
+  }
+
   void addRating({
     required int store_id,
     required int user_id,
