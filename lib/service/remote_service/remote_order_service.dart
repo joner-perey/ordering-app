@@ -10,6 +10,7 @@ class RemoteOrderService {
   Future<dynamic> fetchCustomerOrders({required String user_id}) async {
     var response =
         await http.get(Uri.parse('$remoteUrl/customer/?user_id=$user_id'));
+    print(response.body);
     final parsedJson = jsonDecode(response.body);
     final results = parsedJson['orders'];
 

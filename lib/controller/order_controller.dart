@@ -25,7 +25,6 @@ class OrderController extends GetxController {
       //call api
       var result =
           await RemoteOrderService().fetchCustomerOrders(user_id: user_id);
-      print(result);
       if (result != null) {
         //assign api result
         orderList.assignAll(result);

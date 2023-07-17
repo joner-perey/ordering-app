@@ -16,31 +16,29 @@ class Store {
   int is_user_subscribed = 0;
   final List<Schedule> schedules;
 
-  Store({
-    required this.id,
-    required this.store_name,
-    required this.store_description,
-    required this.image,
-    required this.location_description,
-    required this.longitude,
-    required this.latitude,
-    required this.user_id,
-    required this.subscription_count,
-    required this.is_user_subscribed,
-    required this.schedules
-  });
+  Store(
+      {required this.id,
+      required this.store_name,
+      required this.store_description,
+      required this.image,
+      required this.location_description,
+      required this.longitude,
+      required this.latitude,
+      required this.user_id,
+      required this.subscription_count,
+      required this.is_user_subscribed,
+      required this.schedules});
 
   factory Store.fromJson(Map<String, dynamic> json) {
     List<Schedule> schedules = [];
 
-    if(json['schedules'] != null) {
+    if (json['schedules'] != null) {
       List<dynamic> schedulesJson = json['schedules'];
 
       for (var element in schedulesJson) {
         schedules.add(Schedule.fromJson(element));
       }
     }
-
 
     return Store(
         id: json['id'],
@@ -51,10 +49,11 @@ class Store {
         longitude: json['longitude'],
         latitude: json['latitude'],
         user_id: json['user_id'],
-        subscription_count: json['subscription_count'],
-        is_user_subscribed: json['is_user_subscribed'],
-        schedules: schedules
-    );
+        subscription_count:
+            json['subscription_count'] ?? 0,
+        is_user_subscribed:
+            json['is_user_subscribed'] ?? 0,
+        schedules: schedules);
   }
 
   @override
@@ -65,7 +64,15 @@ class Store {
   Schedule? getScheduleNow() {
     var date = DateTime.now();
 
-    var daysStr = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    var daysStr = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday'
+    ];
     var dayOfWeek = DateFormat('EEEE').format(date);
     var dayIndex = -1;
 
@@ -77,7 +84,6 @@ class Store {
         dayIndex = i;
         break;
       }
-
     }
 
     for (var schedule in schedules) {
@@ -95,5 +101,4 @@ class Store {
 
     return null;
   }
-
 }

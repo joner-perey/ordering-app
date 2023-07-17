@@ -8,8 +8,13 @@ import 'package:lalaco/model/rating.dart';
 class RatingScreen extends StatefulWidget {
   final int store_id;
   final int order_id;
+  final bool has_rating;
 
-  const RatingScreen({Key? key, required this.store_id, required this.order_id})
+  const RatingScreen(
+      {Key? key,
+      required this.store_id,
+      required this.order_id,
+      required this.has_rating})
       : super(key: key);
 
   @override
@@ -42,76 +47,83 @@ class _RatingScreenState extends State<RatingScreen> {
         body: ListView(
           padding: const EdgeInsets.all(15.0),
           children: [
-            Container(
-              padding: EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.grey,
-                  width: 1.0,
-                ),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Rate: ',
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
-                      RatingBar.builder(
-                        initialRating: currentRating,
-                        direction: Axis.horizontal,
-                        itemCount: 5,
-                        itemSize: 35,
-                        itemBuilder: (context, index) => Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                        ),
-                        onRatingUpdate: (rating) {
-                          setState(() {
-                            currentRating = rating;
-                            ratingTextAreaController.text =
-                                currentRating.toString();
-                          });
-                        },
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        currentRating.toString(),
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+            Visibility(
+              visible: !widget.has_rating &&
+                  authController.user.value?.user_type == 'Customer',
+              child: Container(
+                padding: EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey,
+                    width: 1.0,
                   ),
-                  SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: InputTextArea(
-                          title: 'Write review',
-                          textEditingController: commentTextAreaController,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Rate: ',
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 5),
-                      ElevatedButton(
-                        onPressed: () {
-                          ratingController.addRating(
+                        RatingBar.builder(
+                          initialRating: currentRating,
+                          direction: Axis.horizontal,
+                          itemCount: 5,
+                          itemSize: 35,
+                          itemBuilder: (context, index) => Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          ),
+                          onRatingUpdate: (rating) {
+                            setState(() {
+                              currentRating = rating;
+                              ratingTextAreaController.text =
+                                  currentRating.toString();
+                            });
+                          },
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          currentRating.toString(),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: InputTextArea(
+                            title: 'Write review',
+                            textEditingController: commentTextAreaController,
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        ElevatedButton(
+                          onPressed: () {
+                            ratingController.addRating(
                               store_id: widget.store_id,
                               user_id: int.parse(authController.user.value!.id),
                               comment: commentTextAreaController.text,
                               rate: double.parse(ratingTextAreaController.text),
-                              order_id: widget.order_id);
-                        },
-                        child: Text('Submit'),
-                      ),
-                    ],
-                  ),
-                ],
+                              order_id: widget.order_id,
+                            );
+                            orderDetailController.fetchOrderToCustomer(
+                                order_id: widget.order_id);
+                          },
+                          child: Text('Submit'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             SizedBox(height: 20),
@@ -134,9 +146,93 @@ class _RatingScreenState extends State<RatingScreen> {
                       itemCount: ratings.length,
                       itemBuilder: (context, index) {
                         final rating = ratings[index];
-                        return ListTile(
-                          title: Text('Rating: ${rating.rate}'),
-                          subtitle: Text('Comment: ${rating.comment}'),
+                        return Container(
+                          padding: EdgeInsets.all(10.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Customer: ',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        rating.user.name,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Rate: ',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      RatingBar.builder(
+                                        initialRating: rating.rate.toDouble(),
+                                        direction: Axis.horizontal,
+                                        itemCount: 5,
+                                        itemSize: 25,
+                                        itemBuilder: (context, index) => Icon(
+                                          Icons.star,
+                                          color: Colors.amber,
+                                        ),
+                                        onRatingUpdate: (rating) {
+                                          setState(() {
+                                            // currentRating = rating;
+                                            // ratingTextAreaController.text =
+                                            //     currentRating.toString();
+                                          });
+                                        },
+                                        ignoreGestures:
+                                            true, // Make the RatingBar non-editable
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        rating.rate.toString(),
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      'Comment:  ${rating.comment}',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         );
                       },
                     );

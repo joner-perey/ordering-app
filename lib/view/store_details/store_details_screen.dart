@@ -12,6 +12,7 @@ import 'package:lalaco/view/home/components/popular_product/popular_product_load
 import 'package:lalaco/view/home/components/section_title.dart';
 import 'package:lalaco/view/product/product_screen.dart';
 import 'package:lalaco/view/product_details/compnents/product_carousel_slider.dart';
+import 'package:lalaco/view/review/rating_screen.dart';
 import 'package:lalaco/view/store_details/components/store_carousel_slider.dart';
 import 'package:lalaco/view/subscription/subscription_screen.dart';
 
@@ -71,9 +72,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                   widget.store.store_name,
                   style: TextStyle(
                     fontSize: 24,
-                    color: Theme
-                        .of(context)
-                        .primaryColor,
+                    color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -88,39 +87,52 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SubscriptionScreen(storeId: widget.store.id)));
+                                  builder: (context) => SubscriptionScreen(
+                                      storeId: widget.store.id)));
                         },
                         style: TextButton.styleFrom(
-                          foregroundColor: Colors.black54
-                        ),
-                        child: Text('${widget.store.subscription_count} Subscribers')),
-                    SizedBox(width: 8,),
-                    ElevatedButton(onPressed: () {
-                      if (widget.store.is_user_subscribed == 1) {
-                        subscriptionController.deleteSubscription(user_id: authController.user.value!.id, store_id: widget.store.id.toString()).then((value) {
-
-                          setState(() {
-                            widget.store.is_user_subscribed = 0;
-                            widget.store.subscription_count -= 1;
+                            foregroundColor: Colors.black54),
+                        child: Text(
+                            '${widget.store.subscription_count} Subscribers')),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (widget.store.is_user_subscribed == 1) {
+                          subscriptionController
+                              .deleteSubscription(
+                                  user_id: authController.user.value!.id,
+                                  store_id: widget.store.id.toString())
+                              .then((value) {
+                            setState(() {
+                              widget.store.is_user_subscribed = 0;
+                              widget.store.subscription_count -= 1;
+                            });
                           });
-                        });
-                      } else {
-                        subscriptionController.addSubscription(user_id: authController.user.value!.id, store_id: widget.store.id.toString()).then((value) {
-
-                          setState(() {
-                            widget.store.is_user_subscribed = 1;
-                            widget.store.subscription_count += 1;
+                        } else {
+                          subscriptionController
+                              .addSubscription(
+                                  user_id: authController.user.value!.id,
+                                  store_id: widget.store.id.toString())
+                              .then((value) {
+                            setState(() {
+                              widget.store.is_user_subscribed = 1;
+                              widget.store.subscription_count += 1;
+                            });
                           });
-                        });
-                      }
-
-
-                    },
-                      child: Text(widget.store.is_user_subscribed == 1 ? 'Subscribed' : 'Subscribe'),
+                        }
+                      },
+                      child: Text(widget.store.is_user_subscribed == 1
+                          ? 'Subscribed'
+                          : 'Subscribe'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: widget.store.is_user_subscribed != 1 ? Colors.deepPurpleAccent : Colors.white,
-                        foregroundColor: widget.store.is_user_subscribed != 1 ? Colors.white : Colors.black54
-                      ),
+                          backgroundColor: widget.store.is_user_subscribed != 1
+                              ? Colors.deepPurpleAccent
+                              : Colors.white,
+                          foregroundColor: widget.store.is_user_subscribed != 1
+                              ? Colors.white
+                              : Colors.black54),
                     )
                   ],
                 ),
@@ -131,9 +143,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                   'About this store:',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Theme
-                        .of(context)
-                        .primaryColor,
+                    color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -157,9 +167,9 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                     const SizedBox(width: 8),
                     scheduleNow == null
                         ? const Text(
-                      'Closed Now',
-                      style: TextStyle(color: Colors.red),
-                    )
+                            'Closed Now',
+                            style: TextStyle(color: Colors.red),
+                          )
                         : Text(getStrScheduleNow())
                   ],
                 ),
@@ -179,12 +189,12 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                         const SizedBox(width: 8),
                         scheduleNow == null
                             ? const Text(
-                          'Closed Now',
-                          style: TextStyle(color: Colors.red),
-                        )
+                                'Closed Now',
+                                style: TextStyle(color: Colors.red),
+                              )
                             : Text(widget.store
-                            .getScheduleNow()!
-                            .location_description)
+                                .getScheduleNow()!
+                                .location_description)
                       ],
                     ),
                     Visibility(
@@ -196,8 +206,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            ViewLocationPage(
+                                        builder: (context) => ViewLocationPage(
                                               location: LatLng(
                                                   double.parse(
                                                       scheduleNow!.latitude),
@@ -227,64 +236,55 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                   widget.store.getScheduleNow() == null
                       ? Text('Closed Now')
                       : ListTile(
-                    title: Text(
-                        'Now Open - ${scheduleNow!.location_description}'),
-                    subtitle: Text(
-                        ' ${scheduleNow.getStartTime().format(
-                            context)} - ${scheduleNow.getEndTime().format(
-                            context)}'),
-                    trailing: IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      ViewLocationPage(
-                                        location: LatLng(
-                                            double.parse(
-                                                scheduleNow!.latitude),
-                                            double.parse(
-                                                scheduleNow!.longitude)),
-                                      )));
-                        },
-                        icon: const Icon(
-                          Icons.location_on,
-                          color: Colors.orangeAccent,
-                        )),
-                  ),
-                  Divider(height: 1),
-                  ...List<Widget>.generate(widget.store.schedules.length,
-                          (index) {
-                        var schedule = widget.store.schedules[index];
-                        return ListTile(
-                          title: Text(schedule.location_description),
+                          title: Text(
+                              'Now Open - ${scheduleNow!.location_description}'),
                           subtitle: Text(
-                              '${schedule.formatDays()} ${schedule
-                                  .getStartTime().format(context)} - ${schedule
-                                  .getEndTime().format(context)}'),
+                              ' ${scheduleNow.getStartTime().format(context)} - ${scheduleNow.getEndTime().format(context)}'),
                           trailing: IconButton(
                               onPressed: () {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            ViewLocationPage(
+                                        builder: (context) => ViewLocationPage(
                                               location: LatLng(
                                                   double.parse(
-                                                      schedule.latitude),
+                                                      scheduleNow!.latitude),
                                                   double.parse(
-                                                      schedule.longitude)),
+                                                      scheduleNow!.longitude)),
                                             )));
                               },
                               icon: const Icon(
                                 Icons.location_on,
                                 color: Colors.orangeAccent,
                               )),
-                        );
-                      })
+                        ),
+                  Divider(height: 1),
+                  ...List<Widget>.generate(widget.store.schedules.length,
+                      (index) {
+                    var schedule = widget.store.schedules[index];
+                    return ListTile(
+                      title: Text(schedule.location_description),
+                      subtitle: Text(
+                          '${schedule.formatDays()} ${schedule.getStartTime().format(context)} - ${schedule.getEndTime().format(context)}'),
+                      trailing: IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ViewLocationPage(
+                                          location: LatLng(
+                                              double.parse(schedule.latitude),
+                                              double.parse(schedule.longitude)),
+                                        )));
+                          },
+                          icon: const Icon(
+                            Icons.location_on,
+                            color: Colors.orangeAccent,
+                          )),
+                    );
+                  })
                 ],
               ),
-
               const SectionTitle(
                 title: "Store Products",
                 page: ProductScreen(),
@@ -299,38 +299,36 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                   return const PopularProductLoading();
                 }
               }),
-              const SectionTitle(
+              SectionTitle(
                 title: "Store Rating",
-                page: ProductScreen(),
+                page: RatingScreen(
+                    store_id: widget.store.id, order_id: 0, has_rating: true),
               ),
-          Container(
-            margin: EdgeInsets.only(left: 16, right: 16),
-              child: Row(
-                children: [
-                  RatingBarIndicator(
-                    rating: 3,
-                    direction: Axis.horizontal,
-                    itemCount: 5,
-                    itemSize: 35,
-                    itemBuilder: (context, index) =>
-                        Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                        ),
-                  ),
-                  SizedBox(width: 8), // Adjust the width as needed
-                  Text(
-                    '3.0', // Replace with your rating value
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+              Container(
+                margin: EdgeInsets.only(left: 16, right: 16),
+                child: Row(
+                  children: [
+                    RatingBarIndicator(
+                      rating: 3,
+                      direction: Axis.horizontal,
+                      itemCount: 5,
+                      itemSize: 35,
+                      itemBuilder: (context, index) => Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      ),
                     ),
-                  ),
-                ],
+                    SizedBox(width: 8), // Adjust the width as needed
+                    Text(
+                      '3.0', // Replace with your rating value
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-          ),
-
-
               const SizedBox(height: 80),
             ],
           ),

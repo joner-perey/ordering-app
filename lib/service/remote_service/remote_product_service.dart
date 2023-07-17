@@ -48,17 +48,14 @@ class RemoteProductService {
   }
 
   Future<dynamic> getById({required int id}) async {
-    debugPrint('$remoteUrl/products/$id');
-    var response = await client.get(Uri.parse('$remoteUrl/products/$id'));
+    var response = await client.get(Uri.parse('$baseUrl/api/products/$id'));
     final parsedJson = jsonDecode(response.body);
-    final results = parsedJson['products'];
+    final result = parsedJson['product'];
 
     List<Product> products = [];
 
     if (response.statusCode == 200) {
-      for (final result in results) {
-        products.add(Product.fromJson(result));
-      }
+      return Product.fromJson(result);
     } else {
       throw Exception('Failed to load Stores');
     }
@@ -67,7 +64,8 @@ class RemoteProductService {
   }
 
   Future<dynamic> getProductsPerStore({required int store_id}) async {
-    var response = await client.get(Uri.parse('$baseUrl/api/products/per_store?store_id=$store_id'));
+    var response = await client
+        .get(Uri.parse('$baseUrl/api/products/per_store?store_id=$store_id'));
     print(response.statusCode);
     print('asdasd');
     final parsedJson = jsonDecode(response.body);
@@ -116,6 +114,47 @@ class RemoteProductService {
     }
 
     var response = await request.send();
+    return response;
+  }
+
+  Future<dynamic> updateProduct({
+    required int id,
+    required String name,
+    required String description,
+    required double price,
+    required int category_id,
+    required File? image,
+  }) async {
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('$baseUrl/api/products/$id'),
+    );
+    request.headers["Accept"] = "application/json";
+    request.fields['name'] = name;
+    request.fields['description'] = description;
+    request.fields['price'] = price.toString();
+    request.fields['category_id'] = category_id.toString();
+
+    if (image != null) {
+      var imageStream = await image.readAsBytes();
+      var multipartFile = http.MultipartFile.fromBytes(
+        'image',
+        imageStream,
+        filename: image.path.split('/').last,
+      );
+      request.files.add(multipartFile);
+    }
+
+    var response = await request.send();
+    var responseBody = await response.stream.bytesToString();
+    print(responseBody);
+    return response;
+  }
+
+  Future<dynamic> deleteProduct(int product_id) async {
+    var response = await client.delete(
+      Uri.parse('$baseUrl/api/products/$product_id'),
+    );
     return response;
   }
 }

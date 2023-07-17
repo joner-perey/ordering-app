@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:lalaco/controller/controllers.dart';
 import 'package:lalaco/model/product.dart';
 import 'package:lalaco/view/account/auth/sign_in_screen.dart';
+import 'package:lalaco/view/product/components/update_product_screen.dart';
 import 'package:lalaco/view/product_details/compnents/product_carousel_slider.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
@@ -133,18 +134,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: Visibility(
-        visible: authController.user.value?.user_type == 'Customer',
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextButton(
-            style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-              backgroundColor: MaterialStateProperty.all<Color>(
-                  Theme.of(context).primaryColor),
-            ),
-            onPressed: () {
-              if (authController.user.value != null) {
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextButton(
+          style: ButtonStyle(
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            backgroundColor: MaterialStateProperty.all<Color>(
+                Theme.of(context).primaryColor),
+          ),
+          onPressed: () {
+            if (authController.user.value != null) {
+              if (authController.user.value?.user_type == 'Customer') {
                 int? lastStoreId = cartItemsController.cartItemList.isNotEmpty
                     ? cartItemsController.cartItemList.last.store_id
                     : null;
@@ -201,15 +201,28 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const SignInScreen()));
+                        builder: (context) => UpdateProductScreen(
+                            product_id: widget.product.id))).then((value) {
+                  var _val = value as String;
+                  if (_val == 'exit') {
+                    Navigator.pop(context);
+                  }
+                });
               }
-            },
-            child: const Padding(
-              padding: EdgeInsets.all(6.0),
-              child: Text(
-                'Add to Cart',
-                style: TextStyle(fontSize: 16),
-              ),
+            } else {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SignInScreen()));
+            }
+          },
+          child: Padding(
+            padding: EdgeInsets.all(6.0),
+            child: Text(
+              authController.user.value?.user_type == 'Customer'
+                  ? 'Add to Cart'
+                  : 'Update Product',
+              style: TextStyle(fontSize: 16),
             ),
           ),
         ),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:lalaco/controller/controllers.dart';
 import 'package:lalaco/model/product.dart';
 import 'package:lalaco/model/rating.dart';
 import 'package:lalaco/service/remote_service/remote_product_service.dart';
