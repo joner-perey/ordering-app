@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lalaco/const.dart';
 import 'package:lalaco/controller/controllers.dart';
 import 'package:lalaco/view/order/order_details_screen.dart';
 import 'package:lalaco/view/review/rating_screen.dart';
+
+import '../select_location/view_location.dart';
 
 class OrderScreen extends StatelessWidget {
   const OrderScreen({Key? key}) : super(key: key);
@@ -67,8 +70,14 @@ class OrderScreen extends StatelessWidget {
                                     children: [
                                       Column(
                                         children: [
+                                          image != null ?
                                           Image.network(
                                             '$baseUrl/storage/uploads/$image',
+                                            width: 90,
+                                            height: 100,
+                                            fit: BoxFit.cover,
+                                          ) : Image.asset(
+                                            "assets/user_image.png",
                                             width: 90,
                                             height: 100,
                                             fit: BoxFit.cover,
@@ -192,6 +201,25 @@ class OrderScreen extends StatelessWidget {
                                                   fontSize: 16,
                                                 ),
                                               ),
+                                              SizedBox(height: 5),
+                                              IconButton(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ViewLocationPage(
+                                                                  location: LatLng(
+                                                                      double.parse(
+                                                                          order.latitude),
+                                                                      double.parse(
+                                                                          order.longitude)),
+                                                                )));
+                                                  },
+                                                  icon: const Icon(
+                                                    Icons.location_on,
+                                                    color: Colors.orangeAccent,
+                                                  )),
                                               SizedBox(height: 5),
                                               Row(
                                                 children: [

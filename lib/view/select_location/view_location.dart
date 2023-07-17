@@ -80,7 +80,7 @@ class ViewLocationPageState extends State<ViewLocationPage> {
 
     selectedPositionMarker = Marker(
         markerId: const MarkerId('selectedPositionMarker'),
-        icon: markerIcon,
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
         position: widget.location
     );
 
