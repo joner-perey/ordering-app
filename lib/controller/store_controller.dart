@@ -27,7 +27,7 @@ class StoreController extends GetxController {
     super.onInit();
   }
 
-  void getStores({ required String userId }) async {
+  Future<void> getStores({ required String userId }) async {
     try {
       isStoreLoading(true);
       //call api

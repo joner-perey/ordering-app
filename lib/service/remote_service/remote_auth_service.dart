@@ -141,4 +141,39 @@ class RemoteAuthService {
     print(response.body);
     return response;
   }
+
+  Future<dynamic> updateLocation({
+    required String? auth_token,
+    required String latitude,
+    required String longitude,
+  }) async {
+    var body = {
+      "latitude": latitude,
+      "longitude": longitude,
+    };
+    final response = await http.put(
+      Uri.parse('$baseUrl/api/users/update_location'),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $auth_token"
+      },
+      body: jsonEncode(body),
+    );
+    print(response.body);
+    return response;
+  }
+
+  Future<dynamic> updateWalkThrough({
+    required String? auth_token,
+  }) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/api/users/update_walk_through'),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $auth_token"
+      },
+    );
+    print(response.body);
+    return response;
+  }
 }

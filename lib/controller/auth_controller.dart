@@ -17,6 +17,7 @@ class AuthController extends GetxController {
   static AuthController instance = Get.find();
   Rxn<User> user = Rxn<User>();
   Rxn<Store> store = Rxn<Store>();
+  int? walk_through;
   final LocalAuthService localAuthService = LocalAuthService();
   final ImagePicker _picker = ImagePicker();
 
@@ -24,6 +25,7 @@ class AuthController extends GetxController {
   void onInit() async {
     await localAuthService.init();
 
+    walk_through = localAuthService.getWalkThrough();
     int? userId = localAuthService.getUserId();
     if (userId != null) {
       User? _user = await fetchUser(userId: userId);
@@ -157,6 +159,7 @@ class AuthController extends GetxController {
         await localAuthService.addToken(token: token);
         await localAuthService.addUser(user: _user);
         await localAuthService.addUserId(userId: int.parse(_user.id));
+        await localAuthService.updateWalkThrough(walkThrough: json.decode(result.body)['user']['walk_through']);
 
 
         // update fcm token
@@ -250,6 +253,28 @@ class AuthController extends GetxController {
     } finally {
       EasyLoading.dismiss();
     }
+  }
+
+  Future<void> updateLocation({
+    required String latitude,
+    required String longitude,
+  }) async {
+    try {
+      var result = await RemoteAuthService().updateLocation(
+        auth_token: localAuthService.getToken(),
+        latitude: latitude,
+        longitude: longitude,
+      );
+      if (result.statusCode == 200) {
+        print('Customer Location Updated');
+      }
+    } catch (e) {
+      // Error occurred during location update
+    }
+  }
+
+  Future<void> updateWalkThrough() async {
+    await RemoteAuthService().updateWalkThrough(auth_token: localAuthService.getToken());
   }
 
   void signOut() async {

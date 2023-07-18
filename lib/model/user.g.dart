@@ -23,6 +23,8 @@ class UserAdapter extends TypeAdapter<User> {
       user_type: fields[3] as String,
       image: fields[4] as String?,
       phone_number: fields[5] as String,
+      latitude: fields[6] as String,
+      longitude: fields[7] as String,
     );
   }
 

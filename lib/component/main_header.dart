@@ -43,7 +43,6 @@ class _MainHeaderState extends State<MainHeader> {
                 ],
               ),
               child: TextField(
-                autofocus: true,
                 controller: productController.searchTextEditController,
                 onSubmitted: (val) {
                   if (_selectedFilter == 'Product') {

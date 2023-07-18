@@ -57,7 +57,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Stores'),
+        title: const Text('Store'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
