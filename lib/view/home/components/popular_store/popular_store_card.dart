@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lalaco/const.dart';
+import 'package:lalaco/controller/controllers.dart';
 import 'package:lalaco/model/category.dart';
 import 'package:lalaco/model/store.dart';
 import 'package:lalaco/view/store_details/store_details_screen.dart';
@@ -26,7 +27,10 @@ class PopularStoreCard extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => StoreDetailsScreen(store: store)));
+                      builder: (context) => StoreDetailsScreen(store: store))).then((value) {
+                        productController.productPerStoreList.clear();
+                        homeController.getPopularProducts();
+              });
             },
             child: Container(
               width: 270,

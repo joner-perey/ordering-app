@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lalaco/controller/controllers.dart';
 
 class SectionTitle extends StatelessWidget {
   final String title;
@@ -19,6 +20,7 @@ class SectionTitle extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
+              homeController.getPopularProducts();
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => page),

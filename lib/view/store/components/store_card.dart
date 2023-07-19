@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lalaco/const.dart';
+import 'package:lalaco/controller/controllers.dart';
 import 'package:lalaco/model/product.dart';
 import 'package:lalaco/model/store.dart';
 import 'package:lalaco/view/product_details/product_details_screen.dart';
@@ -18,9 +19,13 @@ class StoreCard extends StatelessWidget {
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => StoreDetailsScreen(store: store)));
+                context,
+                MaterialPageRoute(
+                    builder: (context) => StoreDetailsScreen(store: store)))
+            .then((value) {
+          productController.productPerStoreList.clear();
+          homeController.getPopularProducts();
+        });
       },
       child: Material(
         elevation: 8,

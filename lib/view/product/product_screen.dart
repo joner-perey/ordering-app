@@ -27,9 +27,9 @@ class ProductScreen extends StatelessWidget {
                       return ProductGrid(
                           products: productController.productPerStoreList);
                     } else
-                      if (productController.productList.isNotEmpty) {
+                      if (homeController.popularProductList.isNotEmpty) {
                       return ProductGrid(
-                          products: productController.productList);
+                          products: homeController.popularProductList);
                     } else {
                       return const Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
