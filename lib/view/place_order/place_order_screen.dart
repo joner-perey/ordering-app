@@ -17,6 +17,7 @@ import 'package:lalaco/model/category.dart';
 import 'package:lalaco/model/store.dart';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:lalaco/view/order/order_screen.dart';
 import 'package:lalaco/view/place_order/build_delivery.dart';
 import 'package:lalaco/view/select_location/select_location.dart';
 
@@ -135,9 +136,9 @@ class _PlaceOrderScreen extends State<PlaceOrderScreen> {
                     child: Column(
                       children: List<Widget>.generate(
                         cartItemsController.cartItemList.length,
-                            (index) {
+                        (index) {
                           final cartItem =
-                          cartItemsController.cartItemList[index];
+                              cartItemsController.cartItemList[index];
                           final image = cartItem.product.image;
                           final name = cartItem.product.name;
                           final price = cartItem.product.price.toString();
@@ -147,7 +148,7 @@ class _PlaceOrderScreen extends State<PlaceOrderScreen> {
                               Container(
                                 decoration: BoxDecoration(
                                   border:
-                                  Border.all(color: Colors.grey.shade400),
+                                      Border.all(color: Colors.grey.shade400),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 padding: const EdgeInsets.all(5),
@@ -170,7 +171,7 @@ class _PlaceOrderScreen extends State<PlaceOrderScreen> {
                                         alignment: Alignment.centerLeft,
                                         child: Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               'Product: $name',
@@ -224,11 +225,10 @@ class _PlaceOrderScreen extends State<PlaceOrderScreen> {
                             latitude: addressPosition.latitude.toString(),
                             type: selectedOrderType.toString(),
                             status: 'Preparing');
-                        // print(deliveryAddress);
-                        // print(addressPosition.toString());
-                        // print(orderNoteController.text);
-                        // print(authController.user.value?.id);
-                        // print(cartItemsController.cartItemList[0].store_id);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => OrderScreen()));
                       }
                     },
                   ),

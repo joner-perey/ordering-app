@@ -39,7 +39,6 @@ class _UpdateProductScreen extends State<UpdateProductScreen> {
   @override
   void initState() {
     fetchStoreData(); // Call the function when the screen initializes
-    print(widget.product_id);
     fetchProductData(widget.product_id);
     productNameController = TextEditingController();
     productDescriptionController = TextEditingController();
