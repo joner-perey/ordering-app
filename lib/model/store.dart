@@ -39,7 +39,7 @@ class Store {
         schedules.add(Schedule.fromJson(element));
       }
     }
-
+    print('store');
     return Store(
         id: json['id'],
         store_name: json['store_name'],
