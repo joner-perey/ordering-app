@@ -18,6 +18,11 @@ class AccountScreen extends StatelessWidget {
 
   AccountScreen({Key? key}) : super(key: key);
 
+  void fetchNotifications() async {
+    var token = authController.localAuthService.getToken()!;
+    await notificationController.getNotifications(token: token);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -145,19 +150,23 @@ class AccountScreen extends StatelessWidget {
               return SizedBox.shrink();
             }
           }),
-          buildAccountCard(title: "Notification", onClick: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const NotificationScreen())).then((value) {
-                      String action = value as String;
-                      if (action == 'view_order') {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const OrderScreen()));
-                      }
-            });
+          Obx(() {
+                return buildAccountCard(title: "Notification", onClick: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const NotificationScreen())).then((value) {
+                            String action = value as String;
+                            if (action == 'view_order') {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const OrderScreen()));
+                            }
+
+                            fetchNotifications();
+                  });
+                });
           }),
           buildAccountCard(
               title: "Settings",
@@ -220,7 +229,22 @@ class AccountScreen extends StatelessWidget {
                 style:
                     const TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
               ),
-              const Icon(Icons.keyboard_arrow_right_outlined)
+              title == 'Notification' && notificationController.notificationCount.value > 0 ?
+               Row(
+                children: [
+                  Icon(Icons.circle, color: Colors.redAccent, size: 15),
+                  SizedBox(width: 5,),
+                  Text(
+                    '${notificationController.notificationCount}',
+                    style:
+                    const TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                  ),
+
+                  Icon(Icons.keyboard_arrow_right_outlined)
+                ],
+              )
+              : const Icon(Icons.keyboard_arrow_right_outlined)
+
             ],
           ),
         ),

@@ -275,6 +275,8 @@ class AuthController extends GetxController {
 
   Future<void> updateWalkThrough() async {
     await RemoteAuthService().updateWalkThrough(auth_token: localAuthService.getToken());
+
+    await localAuthService.updateWalkThrough(walkThrough: 1);
   }
 
   void signOut() async {

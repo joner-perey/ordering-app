@@ -80,6 +80,11 @@ class _DashboardScreen extends State<DashboardScreen> {
     return position;
   }
 
+  void fetchNotifications() async {
+    var token = authController.localAuthService.getToken()!;
+    await notificationController.getNotifications(token: token);
+  }
+
   @override
   void initState() {
     authController.onInit();
@@ -322,6 +327,11 @@ class _DashboardScreen extends State<DashboardScreen> {
               if (val == 0) {
                 handleShowTutorial();
               }
+
+              if (val == 3) {
+                fetchNotifications();
+              }
+
 
               controller.updateIndex(val);
               productController.getProducts();

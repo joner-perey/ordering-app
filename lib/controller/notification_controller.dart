@@ -10,12 +10,13 @@ class NotificationController extends GetxController {
   static NotificationController instance = Get.find();
 
   RxList<NotificationModel> notificationList = List<NotificationModel>.empty(growable: true).obs;
-  RxBool isCategoryLoading = false.obs;
+  RxBool isNotificationLoading = false.obs;
+  RxInt notificationCount = 0.obs;
 
 
   Future<void> getNotifications({required String token}) async {
     try {
-      isCategoryLoading(true);
+      isNotificationLoading(true);
       //call api
       var result = await RemoteNotificationService().fetchNotifications(token: token);
       if (result != null) {
@@ -23,8 +24,21 @@ class NotificationController extends GetxController {
         notificationList.assignAll(result);
       }
     } finally {
-      isCategoryLoading(false);
+      countUnreadNotification();
+      isNotificationLoading(false);
     }
+  }
+
+  void countUnreadNotification() {
+    int count = 0;
+
+    for (var notif in notificationList) {
+      if (notif.read_at == null) {
+        count++;
+      }
+    }
+
+    notificationCount.value = count;
   }
 
   Future<void> readNotifications({required String token}) async {

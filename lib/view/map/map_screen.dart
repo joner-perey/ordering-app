@@ -153,7 +153,7 @@ class MapSampleState extends State<MapSample> {
             onTap: () {
               // debugPrint(store.store_name);
             }),
-        icon: BitmapDescriptor.defaultMarker,
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
         position:
         LatLng(double.parse(subscription.user.latitude!), double.parse(subscription.user.longitude!)),
       ));

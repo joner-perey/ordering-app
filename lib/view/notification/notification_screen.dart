@@ -44,6 +44,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            notificationController.isNotificationLoading.value ?
+            Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: Center(child: CircularProgressIndicator()),
+            ) :
             SizedBox(
               child: notificationController.notificationList.isEmpty ? const Center(child: Padding(
                 padding: EdgeInsets.only(top: 40),
