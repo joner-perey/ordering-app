@@ -42,6 +42,7 @@ class RemoteOrderService {
         try {
           orders.add(Order.fromJson(result));
         } catch (e) {
+          print('asd');
           print(e.toString());
         }
       }

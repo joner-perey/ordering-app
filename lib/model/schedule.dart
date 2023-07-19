@@ -24,6 +24,7 @@ class Schedule {
   });
 
   factory Schedule.fromJson(Map<String, dynamic> json) {
+    print('schedule');
     return Schedule(
       id: json['id'],
       store_id: json['store_id'],

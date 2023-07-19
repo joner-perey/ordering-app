@@ -324,7 +324,6 @@ class OrderScreen extends StatelessWidget {
               user_id: authController.user.value!.id);
         }
       }
-      print(orderController.orderList.length);
     } catch (e) {
       print(e.toString());
     }

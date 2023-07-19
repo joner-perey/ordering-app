@@ -10,6 +10,7 @@ class Subscription {
   });
 
   factory Subscription.fromJson(Map<String, dynamic> json) {
+    print('subscription');
     return Subscription(
       id: json['id'],
       user: User.fromJson(json['user']),

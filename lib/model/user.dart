@@ -45,17 +45,19 @@ class User {
       required this.longitude,
       });
 
-  factory User.fromJson(Map<String, dynamic> data) => User(
-        id: data['id'].toString(),
-        name: data['name'],
-        email: data['email'],
-        user_type: data['user_type'],
-        image: data['image'],
-        phone_number: data['phone_number'],
-        latitude: data['latitude'],
-        longitude: data['longitude'],
-      );
-
+  factory User.fromJson(Map<String, dynamic> data) {
+    print('user');
+    return User(
+      id: data['id'].toString(),
+      name: data['name'],
+      email: data['email'],
+      user_type: data['user_type'],
+      image: data['image'],
+      phone_number: data['phone_number'],
+      latitude: data['latitude'],
+      longitude: data['longitude'],
+    );
+  }
   Map<String, dynamic> toJson() => {
         'id': this.id,
         'name': this.name,

@@ -86,51 +86,55 @@ class ProductCard extends StatelessWidget {
             Positioned(
               top: -5,
               right: -5,
-              child: IconButton(
-                icon: const Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                  size: 28,
+              child: Visibility(
+                visible: authController.user.value?.user_type == 'Vendor',
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                    size: 28,
+                  ),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text('Confirm Delete'),
+                          content: const Text(
+                              'Are you sure you want to delete this product?'),
+                          actions: [
+                            TextButton(
+                              child: const Text(
+                                'Cancel',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            TextButton(
+                              child: const Text(
+                                'Delete',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              onPressed: () {
+                                productController.deleteProduct(product.id);
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
                 ),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text('Confirm Delete'),
-                        content: const Text(
-                            'Are you sure you want to delete this product?'),
-                        actions: [
-                          TextButton(
-                            child: const Text(
-                              'Cancel',
-                              style: TextStyle(
-                                color: Colors.black,
-                              ),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          TextButton(
-                            child: const Text(
-                              'Delete',
-                              style: TextStyle(
-                                color: Colors.black,
-                              ),
-                            ),
-                            onPressed: () {
-                              productController.deleteProduct(product.id);
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
               ),
             ),
+
           ],
         ),
       ),

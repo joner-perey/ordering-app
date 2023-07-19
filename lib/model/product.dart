@@ -9,7 +9,7 @@ class Product {
 
   final int category_id;
   final int store_id;
-  final Category category;
+  final Category? category;
 
   const Product({
     required this.id,
@@ -23,6 +23,7 @@ class Product {
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
+    print('Product');
     return Product(
         id: json['id'],
         name: json['name'],
@@ -31,6 +32,7 @@ class Product {
         price: double.parse(json['price']),
         category_id: json['category_id'],
         store_id: json['store_id'],
-        category: Category.fromJson(json['category']));
+
+        category: json['category'] == null ? null : Category.fromJson(json['category']));
   }
 }

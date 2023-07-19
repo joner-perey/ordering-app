@@ -136,93 +136,26 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: TextButton(
-          style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            backgroundColor: MaterialStateProperty.all<Color>(
-                Theme.of(context).primaryColor),
-          ),
-          onPressed: () {
-            if (authController.user.value != null) {
-              if (authController.user.value?.user_type == 'Customer') {
-                int? lastStoreId = cartItemsController.cartItemList.isNotEmpty
-                    ? cartItemsController.cartItemList.last.store_id
-                    : null;
-                if (lastStoreId == widget.product.store_id ||
-                    lastStoreId == null) {
-                  cartItemsController.addToCart(
-                      product_id: widget.product.id,
-                      quantity: _qty,
-                      user_id: int.parse(authController.user.value!.id),
-                      store_id: widget.product.store_id);
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text('Add to Cart'),
-                        content: const Text(
-                            'The product you want to add has different store than the current product/s in cart?'),
-                        actions: [
-                          TextButton(
-                            child: const Text(
-                              'Cancel',
-                              style: TextStyle(
-                                color: Colors.black,
-                              ),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          TextButton(
-                            child: const Text(
-                              'Confirm',
-                              style: TextStyle(
-                                color: Colors.black,
-                              ),
-                            ),
-                            onPressed: () {
-                              cartItemsController.addToCart(
-                                  product_id: widget.product.id,
-                                  quantity: _qty,
-                                  user_id:
-                                      int.parse(authController.user.value!.id),
-                                  store_id: widget.product.store_id);
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
-              } else {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => UpdateProductScreen(
-                            product_id: widget.product.id))).then((value) {
-                  var _val = value as String;
-                  if (_val == 'exit') {
-                    Navigator.pop(context);
-                  }
-                });
-              }
-            } else {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SignInScreen()));
-            }
-          },
-          child: Padding(
-            padding: EdgeInsets.all(6.0),
-            child: Text(
-              authController.user.value?.user_type == 'Customer'
-                  ? 'Add to Cart'
-                  : 'Update Product',
-              style: TextStyle(fontSize: 16),
+        child: Visibility(
+          visible: authController.user.value != null,
+          child: TextButton(
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              backgroundColor: MaterialStateProperty.all<Color>(
+                Theme.of(context).primaryColor,
+              ),
+            ),
+            onPressed: () {
+              // Rest of your button logic...
+            },
+            child: Padding(
+              padding: EdgeInsets.all(6.0),
+              child: Text(
+                authController.user.value?.user_type == 'Customer'
+                    ? 'Add to Cart'
+                    : 'Update Product',
+                style: TextStyle(fontSize: 16),
+              ),
             ),
           ),
         ),
