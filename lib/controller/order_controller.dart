@@ -77,7 +77,6 @@ class OrderController extends GetxController {
       );
       if (result.statusCode == 201 || result.statusCode == 200) {
         EasyLoading.showSuccess("Order Completed");
-        Navigator.of(Get.overlayContext!).pop();
         cartItemsController.getCartItems();
       } else {
         EasyLoading.showError('1!');

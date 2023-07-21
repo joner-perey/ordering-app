@@ -146,7 +146,20 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
             ),
             onPressed: () {
-              // Rest of your button logic...
+              if (authController.user.value?.user_type == 'Customer') {
+                cartItemsController.addToCart(
+                    product_id: widget.product.id,
+                    quantity: _qty,
+                    user_id: int.parse(authController.user.value!.id),
+                    store_id: widget.product.store_id);
+              } else if (authController.user.value?.user_type == 'Vendor') {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UpdateProductScreen(
+                              product_id: widget.product.id,
+                            )));
+              }
             },
             child: Padding(
               padding: EdgeInsets.all(6.0),

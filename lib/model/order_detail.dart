@@ -21,7 +21,6 @@ class OrderDetail {
     // final List<dynamic> orderDetails = json['order_details'];
     // final List<Product> products = [];
     // final List<Product> finalProducts = products;
-    print('order details');
     return OrderDetail(
       id: json['id'],
       order_id: json['order_id'],

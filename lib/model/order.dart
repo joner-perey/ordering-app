@@ -44,7 +44,6 @@ class Order {
     }
 
     final List<OrderDetail> finalProducts = _orderDetails;
-    print('order');
     return Order(
       id: json['id'],
       user_id: json['user_id'].toString(),

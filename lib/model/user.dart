@@ -46,7 +46,6 @@ class User {
       });
 
   factory User.fromJson(Map<String, dynamic> data) {
-    print('user');
     return User(
       id: data['id'].toString(),
       name: data['name'],
