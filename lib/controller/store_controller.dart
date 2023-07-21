@@ -41,6 +41,20 @@ class StoreController extends GetxController {
     }
   }
 
+  Future<Store?> getStoreById({required int storeId, required int userId}) async {
+    try {
+      isStoreLoading(true);
+      //call api
+      var result =
+      await RemoteStoreService().fetchStoreById(storeId: storeId, userId: userId);
+      if (result != null) {
+        return result;
+      }
+    } finally {
+      isStoreLoading(false);
+    }
+  }
+
   Future<Store?> getStoreByUserId({required int user_id}) async {
     try {
       isStoreLoading(true);

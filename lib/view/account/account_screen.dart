@@ -140,10 +140,19 @@ class AccountScreen extends StatelessWidget {
           Obx(() {
             if (authController.user.value?.user_type.toString() == 'Vendor') {
               return buildAccountCard(title: "My Schedule", onClick: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const ScheduleScreen()));
+
+
+                if (authController.user.value != null) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ScheduleScreen()));
+                } else {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SignInScreen()));
+                }
               });
             } else {
               // Return another widget or null if the condition is false
@@ -152,20 +161,30 @@ class AccountScreen extends StatelessWidget {
           }),
           Obx(() {
                 return buildAccountCard(title: "Notification", onClick: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const NotificationScreen())).then((value) {
-                            String action = value as String;
-                            if (action == 'view_order') {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const OrderScreen()));
-                            }
+                  if (authController.user.value != null) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const NotificationScreen())).then((value) {
+                      String action = value as String;
+                      if (action == 'view_order') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const OrderScreen()));
+                      }
 
-                            fetchNotifications();
-                  });
+                      fetchNotifications();
+                    });
+                  } else {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SignInScreen()));
+                  }
+
+
+
                 });
           }),
           buildAccountCard(

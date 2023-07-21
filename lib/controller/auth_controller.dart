@@ -161,6 +161,7 @@ class AuthController extends GetxController {
         await localAuthService.addUserId(userId: int.parse(_user.id));
         await localAuthService.updateWalkThrough(walkThrough: json.decode(result.body)['user']['walk_through']);
 
+        notificationController.getNotifications(token: token);
 
         // update fcm token
         final fcmToken = await FirebaseMessaging.instance.getToken();
