@@ -29,7 +29,6 @@ class CartScreen extends StatelessWidget {
             //   },
             //   icon: const Icon(Icons.arrow_back),
             // ),
-            const SizedBox(height: 20),
             Expanded(
               child: Obx(() {
                 if (cartItemsController.isCartItemsLoading.value) {
@@ -40,40 +39,47 @@ class CartScreen extends StatelessWidget {
                       cartItems: cartItemsController.cartItemList,
                     );
                   } else {
-                    return const Column(
+                    return Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Image.asset('assets/product_not_found.png'),
-                        SizedBox(height: 10),
-                        Text('Cart is Empty!'),
+                        Image.asset('assets/product_not_found.png'),
+                        Text('Cart is Empty!',
+                            style: TextStyle(
+                                fontSize: 20, // Adjust the font size as needed
+                                fontWeight: FontWeight.bold)),
                       ],
                     );
                   }
                 }
               }),
             ),
-            Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.symmetric(vertical: 20),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
+            Visibility(
+              visible: orderController.orderList.isNotEmpty,
+              child: Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.symmetric(vertical: 20),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const PlaceOrderScreen()));
-                },
-                style: ElevatedButton.styleFrom(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                        builder: (context) => const PlaceOrderScreen(),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    primary: Colors.orange,
                   ),
-                  primary: Colors.orange,
-                ),
-                child: const Text(
-                  'Place Order',
-                  style: TextStyle(fontSize: 18),
+                  child: const Text(
+                    'Place Order',
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
               ),
             ),
