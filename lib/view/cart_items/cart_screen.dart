@@ -30,7 +30,6 @@ class CartScreen extends StatelessWidget {
             //   },
             //   icon: const Icon(Icons.arrow_back),
             // ),
-            const SizedBox(height: 20),
             Expanded(
               child: Obx(() {
                 if (cartItemsController.isCartItemsLoading.value) {
@@ -41,18 +40,16 @@ class CartScreen extends StatelessWidget {
                       cartItems: cartItemsController.cartItemList,
                     );
                   } else {
-                    return const Center(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // Image.asset('assets/product_not_found.png'),
-                          SizedBox(height: 10),
-                          Text('Cart is Empty!', style: TextStyle(
-                            fontSize: 20
-                          )),
-                        ],
-                      ),
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset('assets/product_not_found.png'),
+                        Text('Cart is Empty!',
+                            style: TextStyle(
+                                fontSize: 20, // Adjust the font size as needed
+                                fontWeight: FontWeight.bold)),
+                      ],
                     );
                   }
                 }
@@ -65,7 +62,6 @@ class CartScreen extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(vertical: 20),
                 child: ElevatedButton(
                   onPressed: () {
-
                     if (cartItemsController.cartItemList.isNotEmpty) {
                       Navigator.push(
                           context,

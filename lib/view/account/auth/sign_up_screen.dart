@@ -180,6 +180,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         password: passwordController.text,
                         user_type: selectedUserType.toString(),
                       );
+
                     }
                   },
                 ),

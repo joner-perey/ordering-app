@@ -12,6 +12,7 @@ import 'package:lalaco/service/remote_service/remote_auth_service.dart';
 import 'package:lalaco/service/local_service/local_auth_service.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:lalaco/view/account/auth/sign_in_screen.dart';
 
 class AuthController extends GetxController {
   static AuthController instance = Get.find();
@@ -43,7 +44,6 @@ class AuthController extends GetxController {
       }
     }
 
-
     super.onInit();
   }
 
@@ -57,7 +57,7 @@ class AuthController extends GetxController {
     }
 
     return null;
-}
+  }
 
   Future<void> uploadProfilePicture() async {
     final XFile? pickedImage =
@@ -116,17 +116,9 @@ class AuthController extends GetxController {
       );
       print(result.statusCode);
       if (result.statusCode == 200 || result.statusCode == 201) {
-        // String token = json.decode(result.body)['token'];
-        // var userResult = await RemoteAuthService().createProfile(fullName: fullName, token: token);
-        // if(userResult.statusCode == 200) {
-        //   user.value = userFromJson(userResult.body);
-        // await _localAuthService.addToken(token: token);
-        // await _localAuthService.addUser(user: user);
-        EasyLoading.showSuccess("Welcome to Lalaco!");
-        Navigator.of(Get.overlayContext!).pop();
-        // } else {
-        //   EasyLoading.showError('Something wrong. Try again!');
-        // }
+        EasyLoading.showSuccess("Sign up Successful!");
+        Navigator.pushReplacement(Get.overlayContext!,
+            MaterialPageRoute(builder: (context) => const SignInScreen()));
       } else {
         EasyLoading.showError('1Something wrong. Try again!');
       }
@@ -159,13 +151,15 @@ class AuthController extends GetxController {
         await localAuthService.addToken(token: token);
         await localAuthService.addUser(user: _user);
         await localAuthService.addUserId(userId: int.parse(_user.id));
-        await localAuthService.updateWalkThrough(walkThrough: json.decode(result.body)['user']['walk_through']);
+        await localAuthService.updateWalkThrough(
+            walkThrough: json.decode(result.body)['user']['walk_through']);
 
         notificationController.getNotifications(token: token);
 
         // update fcm token
         final fcmToken = await FirebaseMessaging.instance.getToken();
-        await RemoteAuthService().updateFcmToken(auth_token: token, fcm_token: fcmToken!);
+        await RemoteAuthService()
+            .updateFcmToken(auth_token: token, fcm_token: fcmToken!);
 
         if (_user.user_type == 'Vendor') {
           Store? _store = await storeController.getStoreByUserId(
@@ -275,7 +269,8 @@ class AuthController extends GetxController {
   }
 
   Future<void> updateWalkThrough() async {
-    await RemoteAuthService().updateWalkThrough(auth_token: localAuthService.getToken());
+    await RemoteAuthService()
+        .updateWalkThrough(auth_token: localAuthService.getToken());
 
     await localAuthService.updateWalkThrough(walkThrough: 1);
   }

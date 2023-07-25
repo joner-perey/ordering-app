@@ -40,6 +40,7 @@ class RatingController extends GetxController {
       isRatingLoading(true);
       double result = await RemoteRatingService()
           .getAverageRatingByStoreId(store_id: store_id);
+      print('rating:  $result');
       return result;
     } finally {
       isRatingLoading(false);
