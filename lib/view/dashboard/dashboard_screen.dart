@@ -328,16 +328,15 @@ class _DashboardScreen extends State<DashboardScreen> {
                 handleShowTutorial();
               }
 
+              if (val == 2) {
+                _mapSampleKey.currentState?.handleDisplayMarkers();
+              }
+
               if (val == 3) {
                 fetchNotifications();
               }
 
-
               controller.updateIndex(val);
-              productController.getProducts();
-
-
-
 
 
               if (authController.user.value != null &&
@@ -351,14 +350,16 @@ class _DashboardScreen extends State<DashboardScreen> {
                   authController.user.value?.user_type == 'Customer') {
                 throttler.run(() {
                   updateUserLocation();
-                  _mapSampleKey.currentState?.handleDisplayMarkers();
+                  // _mapSampleKey.currentState?.handleDisplayMarkers();
+                  storeController.getStores(userId: authController.localAuthService.getUserId()!.toString());
+                  productController.getProducts();
                 });
               }
 
               if (authController.user.value != null &&
                   authController.user.value?.user_type == 'Vendor') {
                 throttler.run(() {
-                  _mapSampleKey.currentState?.handleDisplayMarkers();
+                  // _mapSampleKey.currentState?.handleDisplayMarkers();
                   storeController.getStores(userId: authController.localAuthService.getUserId()!.toString());
                 });
               }

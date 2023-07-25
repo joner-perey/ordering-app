@@ -94,12 +94,14 @@ class MapSampleState extends State<MapSample> {
   @override
   void initState() {
     // handleFetchStores();
-
+    addVendorIcon();
+    addVendorSubscribedIcon();
     _goToTheLake();
     super.initState();
   }
 
-  BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor vendorIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor vendorSubscribedIcon = BitmapDescriptor.defaultMarker;
 
   static Future<Uint8List> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);
@@ -111,20 +113,18 @@ class MapSampleState extends State<MapSample> {
         .asUint8List();
   }
 
-  void addCustomIcon() {
-    // BitmapDescriptor.fromAssetImage(
-    //     const ImageConfiguration(), "assets/shop.png")
-    //     .then(
-    //       (icon) {
-    //     setState(() {
-    //       markerIcon = icon;
-    //     });
-    //   },
-    // );
-
+  void addVendorIcon() {
     getBytesFromAsset('assets/stall.png', 64).then((onValue) {
       setState(() {
-        markerIcon = BitmapDescriptor.fromBytes(onValue);
+        vendorIcon = BitmapDescriptor.fromBytes(onValue);
+      });
+    });
+  }
+
+  void addVendorSubscribedIcon() {
+    getBytesFromAsset('assets/stall_subscribed.png', 64).then((onValue) {
+      setState(() {
+        vendorSubscribedIcon = BitmapDescriptor.fromBytes(onValue);
       });
     });
   }
@@ -142,9 +142,7 @@ class MapSampleState extends State<MapSample> {
     await subscriptionController.fetchSubscriptions(storeId: authController.store.value!.id);
 
     markers.clear();
-
     print('count ${subscriptionController.subscriptionList.length}');
-
     for (var subscription in subscriptionController.subscriptionList) {
       markers.add(Marker(
         markerId: MarkerId(subscription.id.toString()),
@@ -153,9 +151,10 @@ class MapSampleState extends State<MapSample> {
             onTap: () {
               // debugPrint(store.store_name);
             }),
+
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
         position:
-        LatLng(double.parse(subscription.user.latitude!), double.parse(subscription.user.longitude!)),
+        LatLng(double.parse(subscription.user.latitude!), double.parse(subscription.user.longitude!))
       ));
     }
 
@@ -165,6 +164,7 @@ class MapSampleState extends State<MapSample> {
   }
 
   void handleFetchStores() async {
+
     List<Store> stores = await fetchStores();
 
     markers.clear();
@@ -173,6 +173,13 @@ class MapSampleState extends State<MapSample> {
       if (store.latitude == '') {
         continue;
       }
+
+      BitmapDescriptor markerIcon = vendorIcon;
+
+      if (store.is_user_subscribed == 1) {
+        markerIcon = vendorSubscribedIcon;
+      }
+
       markers.add(Marker(
         markerId: MarkerId(store.store_name),
         infoWindow: InfoWindow(
@@ -191,7 +198,7 @@ class MapSampleState extends State<MapSample> {
       ));
     }
 
-    addCustomIcon();
+
 
     setState(() {
 
@@ -199,8 +206,9 @@ class MapSampleState extends State<MapSample> {
   }
 
   Future<List<Store>> fetchStores() async {
+    String userId = authController.user.value!.id;
     var response =
-        await http.get(Uri.parse('$baseUrl/api/stores'));
+        await http.get(Uri.parse('$baseUrl/api/stores?user_id=$userId'));
     final parsedJson = jsonDecode(response.body);
     final results = parsedJson['stores'];
 

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -22,7 +23,11 @@ class ProductController extends GetxController {
     authController.onInit();
     // productList.clear();
     // productPerStoreList.clear();
-    getProducts();
+
+    Timer(Duration(seconds: 3), () async {
+      getProducts();
+    });
+
     // getProductsPerStore(store_id: 1);
     super.onInit();
   }
@@ -31,7 +36,7 @@ class ProductController extends GetxController {
     try {
       isProductLoading(true);
       //call api
-      var result = await RemoteProductService().fetchProducts();
+      var result = await RemoteProductService().fetchProducts(userId: authController.localAuthService.getUserId().toString());
       if (result != null) {
         //assign api result
         productList.assignAll(result);
@@ -79,7 +84,7 @@ class ProductController extends GetxController {
     }
   }
 
-  void addProduct({
+  Future<void> addProduct({
     required String name,
     required String description,
     required double price,
@@ -163,6 +168,7 @@ class ProductController extends GetxController {
       if (result.statusCode == 200) {
         EasyLoading.showSuccess("Item Deleted Successfully!");
         getProducts();
+        deleteProductInLists(product_id);
       } else {
         EasyLoading.showError('Something went wrong. Try again!');
       }
@@ -171,6 +177,27 @@ class ProductController extends GetxController {
       EasyLoading.showError('Something went wrong. Try again!');
     } finally {
       EasyLoading.dismiss();
+    }
+  }
+
+  void deleteProductInLists(int product_id) {
+    for (int i = 0; i < productList.length; i++) {
+      if (productList[i].id == product_id) {
+        productList.removeAt(i);
+        break;
+      }
+    }
+
+    for (int i = 0; i < productPerStoreList.length; i++) {
+      if (productPerStoreList[i].id == product_id) {
+        productPerStoreList.removeAt(i);
+      }
+    }
+
+    for (int i = 0; i < homeController.popularProductList.length; i++) {
+      if (homeController.popularProductList[i].id == product_id) {
+        homeController.popularProductList.removeAt(i);
+      }
     }
   }
 }

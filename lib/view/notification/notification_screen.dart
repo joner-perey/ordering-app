@@ -80,6 +80,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     } else if (notification.type == 'App\\Notifications\\UpdateProductNotification') {
                       notifContent = '${notification.data['store_name']} - We have updated our product ${notification.data['product_name']}';
                       action = 'view_store';
+                    } else if (notification.type == 'App\\Notifications\\NewOrderNotification') {
+                      notifContent = '${notification.data['customer_name']} placed a new order.';
+                      action = 'view_order';
                     }
 
                     return Column(

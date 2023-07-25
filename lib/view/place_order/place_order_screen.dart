@@ -225,7 +225,8 @@ class _PlaceOrderScreen extends State<PlaceOrderScreen> {
                             latitude: addressPosition.latitude.toString(),
                             type: selectedOrderType.toString(),
                             status: 'Preparing');
-                        Navigator.push(
+
+                        Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => OrderScreen()));

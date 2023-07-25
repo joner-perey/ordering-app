@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
+import 'package:lalaco/controller/controllers.dart';
 import 'package:lalaco/model/ad_banner.dart';
 import 'package:lalaco/model/product.dart';
 import 'package:lalaco/model/store.dart';
@@ -25,7 +28,11 @@ class HomeController extends GetxController {
     await localAuthService.init();
     getAdBanners();
     getPopularStores();
-    getPopularProducts();
+
+    Timer(Duration(seconds: 3), () async {
+      getPopularProducts();
+    });
+
     super.onInit();
   }
 
@@ -61,7 +68,7 @@ class HomeController extends GetxController {
   void getPopularProducts() async {
     try {
       isPopularProductLoading(true);
-      var result = await RemoteProductService().fetchProducts();
+      var result = await RemoteProductService().fetchProducts(userId: localAuthService.getUserId().toString());
       if (result != null) {
         popularProductList.assignAll(result);
       }

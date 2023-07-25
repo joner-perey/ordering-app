@@ -281,7 +281,14 @@ class AuthController extends GetxController {
   }
 
   void signOut() async {
+    await RemoteAuthService().updateFcmToken(auth_token: localAuthService.getToken(), fcm_token: '');
+
     user.value = null;
     await localAuthService.clear();
+
+
+
+    notificationController.notificationList.clear();
+    notificationController.notificationCount.value = 0;
   }
 }

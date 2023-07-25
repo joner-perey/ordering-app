@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:lalaco/component/main_header.dart';
 import 'package:lalaco/controller/controllers.dart';
@@ -40,40 +41,51 @@ class CartScreen extends StatelessWidget {
                       cartItems: cartItemsController.cartItemList,
                     );
                   } else {
-                    return const Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Image.asset('assets/product_not_found.png'),
-                        SizedBox(height: 10),
-                        Text('Cart is Empty!'),
-                      ],
+                    return const Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Image.asset('assets/product_not_found.png'),
+                          SizedBox(height: 10),
+                          Text('Cart is Empty!', style: TextStyle(
+                            fontSize: 20
+                          )),
+                        ],
+                      ),
                     );
                   }
                 }
               }),
             ),
-            Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.symmetric(vertical: 20),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const PlaceOrderScreen()));
-                },
-                style: ElevatedButton.styleFrom(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+            Visibility(
+              visible: cartItemsController.cartItemList.isNotEmpty,
+              child: Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.symmetric(vertical: 20),
+                child: ElevatedButton(
+                  onPressed: () {
+
+                    if (cartItemsController.cartItemList.isNotEmpty) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const PlaceOrderScreen()));
+                    }
+
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    primary: Colors.orange,
                   ),
-                  primary: Colors.orange,
-                ),
-                child: const Text(
-                  'Place Order',
-                  style: TextStyle(fontSize: 18),
+                  child: const Text(
+                    'Place Order',
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
               ),
             ),
