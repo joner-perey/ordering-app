@@ -55,7 +55,7 @@ class CartScreen extends StatelessWidget {
               }),
             ),
             Visibility(
-              visible: orderController.orderList.isNotEmpty,
+              visible: cartItemsController.cartItemList.isNotEmpty,
               child: Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.symmetric(vertical: 20),
