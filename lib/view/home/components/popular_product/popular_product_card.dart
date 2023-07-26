@@ -17,6 +17,7 @@ class PopularProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(product.image);
     return Padding(
       padding: const EdgeInsets.fromLTRB(10, 10, 5, 10),
       child: Material(

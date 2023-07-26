@@ -224,7 +224,7 @@ class _PlaceOrderScreen extends State<PlaceOrderScreen> {
                             longitude: addressPosition.longitude.toString(),
                             latitude: addressPosition.latitude.toString(),
                             type: selectedOrderType.toString(),
-                            status: 'Preparing');
+                            status: 'Pending');
 
                         Navigator.pushReplacement(
                             context,
