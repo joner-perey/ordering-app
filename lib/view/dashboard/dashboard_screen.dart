@@ -326,6 +326,17 @@ class _DashboardScreen extends State<DashboardScreen> {
             onTap: (val) {
               if (val == 0) {
                 handleShowTutorial();
+                storeController.getStores(userId: authController.localAuthService.getUserId().toString());
+                productController.getProducts();
+                homeController.getPopularProducts();
+                homeController.getPopularStores();
+              }
+
+              if (val == 1) {
+                storeController.getStores(userId: authController.localAuthService.getUserId().toString());
+                productController.getProducts();
+                homeController.getPopularProducts();
+                homeController.getPopularStores();
               }
 
               if (val == 2) {
@@ -351,8 +362,8 @@ class _DashboardScreen extends State<DashboardScreen> {
                 throttler.run(() {
                   updateUserLocation();
                   // _mapSampleKey.currentState?.handleDisplayMarkers();
-                  storeController.getStores(userId: authController.localAuthService.getUserId()!.toString());
-                  productController.getProducts();
+                  // storeController.getStores(userId: authController.localAuthService.getUserId()!.toString());
+                  // productController.getProducts();
                 });
               }
 
@@ -360,7 +371,7 @@ class _DashboardScreen extends State<DashboardScreen> {
                   authController.user.value?.user_type == 'Vendor') {
                 throttler.run(() {
                   // _mapSampleKey.currentState?.handleDisplayMarkers();
-                  storeController.getStores(userId: authController.localAuthService.getUserId()!.toString());
+                  // storeController.getStores(userId: authController.localAuthService.getUserId()!.toString());
                 });
               }
 

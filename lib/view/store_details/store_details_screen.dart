@@ -98,7 +98,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                       width: 8,
                     ),
                     Visibility(
-                      visible: authController.user.value!.user_type == 'Customer',
+                      visible: authController.user.value?.user_type == 'Customer',
                       child: ElevatedButton(
                         onPressed: () {
                           if (widget.store.is_user_subscribed == 1) {

@@ -23,7 +23,7 @@ class StoreController extends GetxController {
   @override
   void onInit() async {
     await localAuthService.init();
-    getStores(userId: localAuthService.getUserId()!.toString());
+    getStores(userId: localAuthService.getUserId().toString());
     super.onInit();
   }
 

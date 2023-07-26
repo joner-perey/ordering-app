@@ -9,6 +9,8 @@ import 'package:lalaco/model/product.dart';
 import 'package:lalaco/service/remote_service/remote_product_service.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
+import '../service/local_service/local_auth_service.dart';
+
 class ProductController extends GetxController {
   static ProductController instance = Get.find();
   RxList<Product> productList = List<Product>.empty(growable: true).obs;
@@ -18,15 +20,21 @@ class ProductController extends GetxController {
   TextEditingController searchTextEditController = TextEditingController();
   RxString searchVal = ''.obs;
 
+  final LocalAuthService localAuthService = LocalAuthService();
+
   @override
-  void onInit() {
+  void onInit() async {
     authController.onInit();
+
+    await localAuthService.init();
     // productList.clear();
     // productPerStoreList.clear();
 
-    Timer(Duration(seconds: 3), () async {
-      getProducts();
-    });
+    // Timer(Duration(seconds: 3), () async {
+    //   getProducts();
+    // });
+
+    getProducts();
 
     // getProductsPerStore(store_id: 1);
     super.onInit();

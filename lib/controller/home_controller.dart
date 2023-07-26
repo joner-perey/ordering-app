@@ -29,9 +29,11 @@ class HomeController extends GetxController {
     getAdBanners();
     getPopularStores();
 
-    Timer(Duration(seconds: 3), () async {
-      getPopularProducts();
-    });
+    // Timer(Duration(seconds: 3), () async {
+    //   getPopularProducts();
+    // });
+
+    getPopularProducts();
 
     super.onInit();
   }

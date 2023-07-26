@@ -285,5 +285,6 @@ class AuthController extends GetxController {
 
     notificationController.notificationList.clear();
     notificationController.notificationCount.value = 0;
+    productController.productPerStoreList.clear();
   }
 }
