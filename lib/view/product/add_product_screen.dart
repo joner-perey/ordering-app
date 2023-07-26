@@ -168,16 +168,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   const SizedBox(height: 10),
                   InputTextButton(
                     title: "Add Product",
-                    onClick: () {
+                    onClick: () async {
                       // print(_image!.path);
                       if (_formKey.currentState!.validate()) {
-                        productController.addProduct(
+                        await productController.addProduct(
                             name: productNameController.text,
                             description: productDescriptionController.text,
                             price: double.parse(productPriceController.text),
                             category_id: selectedCategory!.id,
                             store_id: store!.id,
                             image: _image);
+                        productController.getProductsPerStore(store_id: store!.id);
                       }
                     },
                   ),

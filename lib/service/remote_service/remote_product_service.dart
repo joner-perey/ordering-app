@@ -11,10 +11,13 @@ class RemoteProductService {
   var client = http.Client();
   var remoteUrl = '$baseUrl/api/products/search';
 
-  Future<dynamic> fetchProducts() async {
-    var response = await http.get(Uri.parse(remoteUrl));
+  Future<dynamic> fetchProducts({ required String userId }) async {
+    var response = await http.get(Uri.parse('$remoteUrl?user_id=$userId'));
     final parsedJson = jsonDecode(response.body);
     final results = parsedJson['products'];
+
+    print(response.body);
+    print('userId: $userId');
 
     List<Product> products = [];
 
@@ -23,7 +26,7 @@ class RemoteProductService {
         products.add(Product.fromJson(result));
       }
     } else {
-      throw Exception('Failed to load Stores');
+      throw Exception('Failed to load Products');
     }
     return products;
   }

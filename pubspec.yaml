@@ -97,6 +97,7 @@ flutter:
   assets:
     - assets/shop.png
     - assets/stall.png
+    - assets/stall_subscribed.png
     - assets/user_image.png
     - assets/product_not_found.png
 

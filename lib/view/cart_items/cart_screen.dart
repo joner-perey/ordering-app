@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:lalaco/component/main_header.dart';
 import 'package:lalaco/controller/controllers.dart';
@@ -61,16 +62,17 @@ class CartScreen extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(vertical: 20),
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const PlaceOrderScreen(),
-                      ),
-                    );
+                    if (cartItemsController.cartItemList.isNotEmpty) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const PlaceOrderScreen()));
+                    }
+
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 16),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),

@@ -27,7 +27,7 @@ class OrderScreen extends StatelessWidget {
             } else if (snapshot.hasError) {
               return Center(child: Text('Error fetching orders'));
             } else {
-              return Center(
+              return SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -202,24 +202,27 @@ class OrderScreen extends StatelessWidget {
                                                 ),
                                               ),
                                               SizedBox(height: 5),
-                                              IconButton(
-                                                  onPressed: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                ViewLocationPage(
-                                                                  location: LatLng(
-                                                                      double.parse(
-                                                                          order.latitude),
-                                                                      double.parse(
-                                                                          order.longitude)),
-                                                                )));
-                                                  },
-                                                  icon: const Icon(
-                                                    Icons.location_on,
-                                                    color: Colors.orangeAccent,
-                                                  )),
+                                              Visibility(
+                                                visible: type == 'Delivery',
+                                                child: IconButton(
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  ViewLocationPage(
+                                                                    location: LatLng(
+                                                                        double.parse(
+                                                                            order.latitude),
+                                                                        double.parse(
+                                                                            order.longitude)),
+                                                                  )));
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.location_on,
+                                                      color: Colors.orangeAccent,
+                                                    )),
+                                              ),
                                               SizedBox(height: 5),
                                               Row(
                                                 children: [

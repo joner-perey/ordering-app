@@ -114,7 +114,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         appBar: AppBar(
           title: const Text('Schedule'),
         ),
-        body: SingleChildScrollView(
+        body: scheduleController.isScheduleLoading.value ? const Center(child: CircularProgressIndicator(),) : SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(left: 16, right: 16),
             child: Column(
