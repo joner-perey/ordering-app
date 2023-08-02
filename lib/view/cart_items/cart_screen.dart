@@ -68,11 +68,10 @@ class CartScreen extends StatelessWidget {
                           MaterialPageRoute(
                               builder: (context) => const PlaceOrderScreen()));
                     }
-
                   },
                   style: ElevatedButton.styleFrom(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
