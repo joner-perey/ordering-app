@@ -166,6 +166,9 @@ class AccountScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (context) => const NotificationScreen())).then((value) {
+
+                      fetchNotifications();
+
                       String action = value as String;
                       if (action == 'view_order') {
                         Navigator.push(
@@ -174,7 +177,7 @@ class AccountScreen extends StatelessWidget {
                                 builder: (context) => const OrderScreen()));
                       }
 
-                      fetchNotifications();
+
                     });
                   } else {
                     Navigator.push(

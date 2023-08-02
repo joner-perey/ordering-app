@@ -10,7 +10,8 @@ class RemoteNotificationService {
 
   Future<List<NotificationModel>> fetchNotifications({required String token}) async {
     var response = await http.get(Uri.parse(remoteUrl), headers: {
-      'Authorization': 'Bearer $token'
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json'
     });
     final parsedJson = jsonDecode(response.body);
     final results = parsedJson['notifications'];

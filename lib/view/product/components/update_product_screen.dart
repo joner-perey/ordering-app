@@ -38,8 +38,11 @@ class _UpdateProductScreen extends State<UpdateProductScreen> {
 
   @override
   void initState() {
-    fetchStoreData(); // Call the function when the screen initializes
-    fetchProductData(widget.product_id);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      fetchStoreData(); // Call the function when the screen initializes
+      fetchProductData(widget.product_id);
+    });
+
     productNameController = TextEditingController();
     productDescriptionController = TextEditingController();
     productPriceController = TextEditingController();
@@ -170,11 +173,10 @@ class _UpdateProductScreen extends State<UpdateProductScreen> {
                   const SizedBox(height: 10),
                   InputTextButton(
                     title: "Update Product",
-                    onClick: () {
+                    onClick: () async {
                       // print(_image!.path);
                       if (_formKey.currentState!.validate()) {
-                        print('asd');
-                        productController.updateProduct(
+                        await productController.updateProduct(
                             id: widget.product_id,
                             name: productNameController.text,
                             description: productDescriptionController.text,
@@ -183,7 +185,7 @@ class _UpdateProductScreen extends State<UpdateProductScreen> {
                             image: _image).then((value) {
                               Navigator.pop(context, 'exit');
                         });
-
+                        Navigator.pop(context);
                       }
                     },
                   ),
