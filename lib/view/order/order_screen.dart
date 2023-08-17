@@ -42,6 +42,7 @@ class OrderScreen extends StatelessWidget {
                             final order = orderController.orderList[index];
                             final store = order.store.store_name;
                             final type = order.type;
+                            final payment_method = order.payment_method;
                             final name = order.user.name;
                             final image = order.user.image;
                             double totalPrice = 0;
@@ -108,6 +109,13 @@ class OrderScreen extends StatelessWidget {
                                               SizedBox(height: 5),
                                               Text(
                                                 'Type: $type',
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                              SizedBox(height: 5),
+                                              Text(
+                                                'Payment Method: $payment_method',
                                                 style: const TextStyle(
                                                   fontSize: 16,
                                                 ),

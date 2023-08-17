@@ -59,6 +59,7 @@ class OrderController extends GetxController {
     required String latitude,
     required String type,
     required String status,
+    required String payment_method,
   }) async {
     try {
       EasyLoading.show(
@@ -74,6 +75,7 @@ class OrderController extends GetxController {
         latitude: latitude,
         type: type,
         status: status,
+        payment_method: payment_method,
       );
       if (result.statusCode == 201 || result.statusCode == 200) {
         EasyLoading.showSuccess("Order Completed");

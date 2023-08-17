@@ -17,6 +17,7 @@ class Order {
   final Store store;
   final User user;
   final bool has_rating;
+  final String payment_method;
 
   const Order({
     required this.id,
@@ -32,6 +33,7 @@ class Order {
     required this.store,
     required this.user,
     required this.has_rating,
+    required this.payment_method,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -58,6 +60,7 @@ class Order {
       store: Store.fromJson(json['store']),
       user: User.fromJson(json['user']),
       has_rating: json['has_rating'],
+      payment_method: json['payment_method']
     );
   }
 }

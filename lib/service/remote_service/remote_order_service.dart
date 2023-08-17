@@ -62,6 +62,7 @@ class RemoteOrderService {
     required latitude,
     required type,
     required status,
+    required payment_method,
   }) async {
     var body = {
       "user_id": user_id,
@@ -72,6 +73,7 @@ class RemoteOrderService {
       "latitude": latitude,
       "type": type,
       "status": status,
+      "payment_method": payment_method,
     };
     var response = await client.post(
       Uri.parse('$baseUrl/api/orders'),

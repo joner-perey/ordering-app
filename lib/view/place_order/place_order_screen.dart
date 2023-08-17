@@ -36,6 +36,7 @@ class _PlaceOrderScreen extends State<PlaceOrderScreen> {
   TextEditingController mobileNoController = TextEditingController();
 
   String? selectedOrderType;
+  String? selectedPaymentMethod;
   String? deliveryAddress;
 
   late LatLng addressPosition = LatLng(0, 0);
@@ -111,6 +112,17 @@ class _PlaceOrderScreen extends State<PlaceOrderScreen> {
                     deliveryPositionController: deliveryPositionController,
                     onUpdateDeliveryAddress: updateDeliveryAddress,
                     onUpdateSelectedPosition: updateSelectedPosition,
+                  ),
+                  const SizedBox(height: 10),
+                  InputDropdownButton(
+                    title: 'Payment Method',
+                    items: const ['COD', 'GCash'],
+                    value: selectedPaymentMethod,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedPaymentMethod = value;
+                      });
+                    },
                   ),
                   const SizedBox(height: 10),
                   InputTextField(
@@ -224,7 +236,9 @@ class _PlaceOrderScreen extends State<PlaceOrderScreen> {
                             longitude: addressPosition.longitude.toString(),
                             latitude: addressPosition.latitude.toString(),
                             type: selectedOrderType.toString(),
-                            status: 'Pending');
+                            status: 'Pending',
+                            payment_method: selectedPaymentMethod.toString()
+                        );
 
                         Navigator.pushReplacement(
                             context,
