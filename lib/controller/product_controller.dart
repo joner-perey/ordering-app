@@ -188,6 +188,7 @@ class ProductController extends GetxController {
     }
   }
 
+
   void deleteProductInLists(int product_id) {
     for (int i = 0; i < productList.length; i++) {
       if (productList[i].id == product_id) {
@@ -204,6 +205,48 @@ class ProductController extends GetxController {
 
     for (int i = 0; i < homeController.popularProductList.length; i++) {
       if (homeController.popularProductList[i].id == product_id) {
+        homeController.popularProductList.removeAt(i);
+      }
+    }
+  }
+
+  void deleteProductsPerStore(int store_id) async {
+    try {
+      EasyLoading.show(
+        status: 'Loading...',
+        dismissOnTap: false,
+      );
+      var result = await RemoteProductService().deleteProductsPerStore(store_id);
+      print(result.statusCode);
+      if (result.statusCode == 200) {
+        EasyLoading.showSuccess("Item Deleted Successfully!");
+        getProducts();
+        deleteStoreProductInLists(store_id);
+      } else {
+        EasyLoading.showError('Something went wrong. Try again!');
+      }
+    } catch (e) {
+      // print(e);
+      EasyLoading.showError('Something went wrong. Try again!');
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  void deleteStoreProductInLists(int store_id) {
+    for (int i = 0; i < productList.length; i++) {
+      if (productList[i].store_id == store_id) {
+        productList.removeAt(i);
+      }
+    }
+    for (int i = 0; i < productPerStoreList.length; i++) {
+      if (productPerStoreList[i].store_id == store_id) {
+        productPerStoreList.removeAt(i);
+      }
+    }
+
+    for (int i = 0; i < homeController.popularProductList.length; i++) {
+      if (homeController.popularProductList[i].store_id == store_id) {
         homeController.popularProductList.removeAt(i);
       }
     }

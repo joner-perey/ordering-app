@@ -160,4 +160,11 @@ class RemoteProductService {
     );
     return response;
   }
+
+  Future<dynamic> deleteProductsPerStore(int store_id) async {
+    var response = await client.delete(
+      Uri.parse('$baseUrl/api/products/per_store/$store_id'),
+    );
+    return response;
+  }
 }

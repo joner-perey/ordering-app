@@ -115,4 +115,14 @@ class RemoteStoreService {
     print(responseBody);
     return response;
   }
+
+  Future<dynamic> deleteStore(int store_id) async {
+    var response = await client.delete(
+      Uri.parse('$baseUrl/api/stores/$store_id'),
+    );
+    print(response.body);
+    return response;
+  }
+
+
 }

@@ -9,6 +9,7 @@ import 'package:lalaco/service/remote_service/remote_product_service.dart';
 import 'package:lalaco/service/remote_service/remote_store_service.dart';
 
 import '../service/local_service/local_auth_service.dart';
+import 'controllers.dart';
 
 class StoreController extends GetxController {
   static StoreController instance = Get.find();
@@ -121,6 +122,50 @@ class StoreController extends GetxController {
       EasyLoading.showError('Profile update failed');
     } finally {
       EasyLoading.dismiss();
+    }
+  }
+
+  void deleteStore(int store_id) async {
+    try {
+      EasyLoading.show(
+        status: 'Loading...',
+        dismissOnTap: false,
+      );
+      var result = await RemoteStoreService().deleteStore(store_id);
+      print(result.statusCode);
+      if (result.statusCode == 200) {
+        EasyLoading.showSuccess("Store Deleted Successfully!");
+        // getProducts();
+        deleteStoresInLists(store_id);
+      } else {
+        EasyLoading.showError('Something went wrong. Try again!');
+      }
+    } catch (e) {
+      // print(e);
+      EasyLoading.showError('Something went wrong. Try again!');
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  void deleteStoresInLists(int store_id) {
+    for (int i = 0; i < storeList.length; i++) {
+      if (storeList[i].id == store_id) {
+        storeList.removeAt(i);
+        break;
+      }
+    }
+
+    // for (int i = 0; i < productPerStoreList.length; i++) {
+    //   if (productPerStoreList[i].id == product_id) {
+    //     productPerStoreList.removeAt(i);
+    //   }
+    // }
+
+    for (int i = 0; i < homeController.popularStoreList.length; i++) {
+      if (homeController.popularStoreList[i].id == store_id) {
+        homeController.popularStoreList.removeAt(i);
+      }
     }
   }
 }

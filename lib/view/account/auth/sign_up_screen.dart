@@ -90,7 +90,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(height: 10),
                 InputDropdownButton(
                   title: 'User Type',
-                  items: ['Customer', 'Vendor'],
+                  items: ['Customer', 'Vendor', 'Admin'],
                   value: selectedUserType,
                   onChanged: (value) {
                     setState(() {

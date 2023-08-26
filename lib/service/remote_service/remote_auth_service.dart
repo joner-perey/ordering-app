@@ -176,4 +176,12 @@ class RemoteAuthService {
     print(response.body);
     return response;
   }
+
+  Future<dynamic> deleteUser(int user_id) async {
+    var response = await client.delete(
+      Uri.parse('$baseUrl/api/users/$user_id'),
+    );
+    print(response.body);
+    return response;
+  }
 }

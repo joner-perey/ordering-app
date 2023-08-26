@@ -287,4 +287,27 @@ class AuthController extends GetxController {
     notificationController.notificationCount.value = 0;
     productController.productPerStoreList.clear();
   }
+
+  void deleteUser(int user_id) async {
+    try {
+      EasyLoading.show(
+        status: 'Loading...',
+        dismissOnTap: false,
+      );
+      var result = await RemoteAuthService().deleteUser(user_id);
+      print(result.statusCode);
+      if (result.statusCode == 200) {
+        EasyLoading.showSuccess("Item Deleted Successfully!");
+        // getProducts();
+        // deleteProductInLists(product_id);
+      } else {
+        EasyLoading.showError('Something went wrong. Try again!');
+      }
+    } catch (e) {
+      // print(e);
+      EasyLoading.showError('Something went wrong. Try again!');
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
 }
